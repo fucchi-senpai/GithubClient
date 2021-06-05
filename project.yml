@@ -1,0 +1,49 @@
+name: GithubClient
+
+options:
+  bundleIdPrefix: "com.shotafuchikami"
+  xcodeVersion: "12.5"
+  deploymentTarget:
+    iOS: "13.0"
+
+targets:
+  GithubClient:
+    type: application
+    platform: iOS
+    sources:
+      - GithubClient
+    settings:
+      base:
+        INFOPLIST_FILE: GithubClient/Info.plist
+  GithubClientTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - GithubClientTests
+    settings:
+      base:
+        INFOPLIST_FILE: GithubClientTests/Info.plist
+  GithubClientUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - GithubClientUITests
+    settings:
+      base:
+        INFOPLIST_FILE: GithubClientUITests/Info.plist
+
+schemes:
+  GithubClient:
+    build:
+      targets:
+        GithubClient: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
