@@ -31,6 +31,9 @@ jobs:
       - name: Xcode version
         run: xcodebuild -version
 
+      - name: Install Mint
+        run: brew install mint
+
       - name: Mint Bootstrap
         run: mint bootstrap
 
