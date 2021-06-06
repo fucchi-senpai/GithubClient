@@ -10,4 +10,6 @@ struct CellData {
     var profileImageData: Data?
     var ownerName: String
     var repositoryName: String
+    var aboutRepository: String = ""
+    var starCount: String = "0"
 }

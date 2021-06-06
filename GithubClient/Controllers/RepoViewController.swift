@@ -67,4 +67,10 @@ extension RepoViewController: RepoTableViewDelegate {
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let userData = CellData(profileImageData: nil, ownerName: "Owner Name", repositoryName: "Repository Name", aboutRepository: "This is repository", starCount: "100")
+        let repoDetailView = RepoDetailView(userData: userData)
+        self.navigationController?.pushViewController(RepoDetailViewController(repoDetailView: repoDetailView, navigationTitle: userData.repositoryName), animated: true)
+    }
+    
 }
