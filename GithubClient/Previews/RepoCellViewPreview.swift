@@ -37,7 +37,7 @@ struct RepoCellViewPreview_Previews: PreviewProvider {
                 
             }
             .previewDisplayName("iPhone 11 pro")
-            .previewLayout(.fixed(width: 390, height: 78))
+            .previewLayout(.fixed(width: 390, height: 390 / 5))
             
             Group {
                 Wrapper(cellData: CellData(profileImageData: nil, ownerName: "fucchi-senpai", repositoryName: "GithubClientGithubClientGithubClientGithubClientGithubClient")).previewDisplayName("リポジトリ名が長い")
@@ -47,7 +47,7 @@ struct RepoCellViewPreview_Previews: PreviewProvider {
                 
             }
             .previewDisplayName("iPad pro 11inch")
-            .previewLayout(.fixed(width: 834, height: 166.8))
+            .previewLayout(.fixed(width: 834, height: 834 / 5))
         }
     }
     static var platform: PreviewPlatform? = .iOS

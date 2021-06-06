@@ -56,7 +56,7 @@ extension RepoViewController: RepoTableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = RepoTableViewCell(cellData: CellData(profileImageData: nil, ownerName: "Owner Name", repositoryName: "Repository Name"))
+        let cell = tableView.dequeueReusableCell(withIdentifier: "repoCellView") ?? RepoTableViewCell(cellData: CellData(profileImageData: nil, ownerName: "Owner Name", repositoryName: "Repository Name"))
         return cell
     }
     
