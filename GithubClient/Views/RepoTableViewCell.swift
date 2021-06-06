@@ -1,5 +1,5 @@
 //
-//  RepoCellView.swift
+//  RepoTableViewCell.swift
 //  GithubClient
 //
 //  Created by Shota Fuchikami on 2021/06/05.
@@ -7,22 +7,21 @@
 
 import UIKit
 
-class RepoCellView: UIView {
+class RepoTableViewCell: UITableViewCell {
 
-    private let tableViewCell = UITableViewCell(style: .default, reuseIdentifier: "cell")
     private let stackView = UIStackView()
     private let textStackView = UIStackView()
-    private let imageView = UIImageView()
+    private let profileImageView = UIImageView()
     private let ownerLabel = UILabel()
     private let repoNameLabel = UILabel()
     
     private var label: String?
     
-    private var cellData: CellData?
+    private var cellData: CellData
     
     init(cellData: CellData) {
-        super.init(frame: .zero)
         self.cellData = cellData
+        super.init(style: .default, reuseIdentifier: "repoCellView")
     }
     
     required init?(coder: NSCoder) {
@@ -34,7 +33,6 @@ class RepoCellView: UIView {
     }
     
     func refresh() {
-        initCellView()
         initStackView()
         initTextStackView()
         initImageView()
@@ -42,24 +40,16 @@ class RepoCellView: UIView {
         initRepoNameLabel()
     }
     
-    private func initCellView() {
-        self.addSubview(tableViewCell)
-        tableViewCell.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            tableViewCell.centerYAnchor.constraint(equalTo: centerYAnchor),
-            tableViewCell.centerXAnchor.constraint(equalTo: centerXAnchor)
-        ])
-    }
     
     private func initStackView() {
         self.addSubview(stackView)
-        stackView.addArrangedSubview(imageView)
+        stackView.addArrangedSubview(profileImageView)
         stackView.addArrangedSubview(textStackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
         NSLayoutConstraint.activate([
             stackView.widthAnchor.constraint(equalTo: widthAnchor),
-            stackView.heightAnchor.constraint(equalTo: heightAnchor),
+            stackView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.95),
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             stackView.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
@@ -71,40 +61,38 @@ class RepoCellView: UIView {
         textStackView.translatesAutoresizingMaskIntoConstraints = false
         textStackView.axis = .vertical
         NSLayoutConstraint.activate([
-            textStackView.heightAnchor.constraint(equalTo: stackView.heightAnchor),
             textStackView.widthAnchor.constraint(equalTo: stackView.widthAnchor, multiplier: 0.8),
-            textStackView.topAnchor.constraint(equalTo: stackView.topAnchor),
-            textStackView.rightAnchor.constraint(equalTo: stackView.rightAnchor),
-            textStackView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor)
+            textStackView.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 16),
+            textStackView.centerYAnchor.constraint(equalTo: stackView.centerYAnchor)
         ])
     }
     
     private func initImageView() {
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        if let imageData = cellData?.profileImageData {
-            imageView.image = UIImage(data: imageData)
+        profileImageView.translatesAutoresizingMaskIntoConstraints = false
+        if let imageData = cellData.profileImageData {
+            profileImageView.image = UIImage(data: imageData)
         } else {
-            imageView.image = UIImage(systemName: "person.circle")
+            profileImageView.image = UIImage(systemName: "person.circle")
         }
-        imageView.tintColor = .gray
+        profileImageView.tintColor = .gray
         NSLayoutConstraint.activate([
-            imageView.heightAnchor.constraint(equalTo: stackView.heightAnchor),
-            imageView.widthAnchor.constraint(equalTo: stackView.widthAnchor, multiplier: 0.2),
-            imageView.topAnchor.constraint(equalTo: stackView.topAnchor),
-            imageView.leftAnchor.constraint(equalTo: stackView.leftAnchor),
-            imageView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor)
+            profileImageView.widthAnchor.constraint(equalTo: stackView.widthAnchor, multiplier: 0.2),
+            profileImageView.centerYAnchor.constraint(equalTo: stackView.centerYAnchor),
         ])
     }
     
     private func initOwnerNameLabel() {
         ownerLabel.translatesAutoresizingMaskIntoConstraints = false
-        ownerLabel.text = cellData?.ownerName
+        ownerLabel.text = "owner: \(cellData.ownerName)"
         ownerLabel.tintColor = .systemFill
-        ownerLabel.font = UIFont.systemFont(ofSize: 16.0)
+        ownerLabel.font = UIFont.systemFont(ofSize: 14.0)
+        ownerLabel.numberOfLines = 1
+        ownerLabel.lineBreakMode = .byTruncatingTail
         NSLayoutConstraint.activate([
             ownerLabel.heightAnchor.constraint(equalTo: textStackView.heightAnchor, multiplier: 0.4),
             ownerLabel.widthAnchor.constraint(equalTo: textStackView.widthAnchor),
             ownerLabel.topAnchor.constraint(equalTo: textStackView.topAnchor),
+            ownerLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 16),
             ownerLabel.rightAnchor.constraint(equalTo: textStackView.rightAnchor),
             ownerLabel.bottomAnchor.constraint(equalTo: repoNameLabel.topAnchor)
         ])
@@ -112,14 +100,17 @@ class RepoCellView: UIView {
     
     private func initRepoNameLabel() {
         repoNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        repoNameLabel.text = cellData?.repositoryName
+        repoNameLabel.text = cellData.repositoryName
         repoNameLabel.tintColor = .systemFill
-        repoNameLabel.font = UIFont.systemFont(ofSize: 24.0)
+        repoNameLabel.font = UIFont.systemFont(ofSize: 20.0)
+        repoNameLabel.numberOfLines = 1
+        repoNameLabel.lineBreakMode = .byTruncatingTail
         NSLayoutConstraint.activate([
             repoNameLabel.heightAnchor.constraint(equalTo: textStackView.heightAnchor, multiplier: 0.6),
             repoNameLabel.widthAnchor.constraint(equalTo: textStackView.widthAnchor),
             repoNameLabel.topAnchor.constraint(equalTo: ownerLabel.bottomAnchor),
-            repoNameLabel.rightAnchor.constraint(equalTo: textStackView.rightAnchor),
+            repoNameLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 16),
+            repoNameLabel.rightAnchor.constraint(equalTo: rightAnchor),
             repoNameLabel.bottomAnchor.constraint(equalTo: textStackView.bottomAnchor)
         ])
     }

@@ -39,12 +39,11 @@ class RepoViewController: UIViewController {
         self.view.addSubview(repoTableView)
         repoTableView.delegate = self
         repoTableView.translatesAutoresizingMaskIntoConstraints = false
-        repoTableView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
         NSLayoutConstraint.activate([
-            repoTableView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            repoTableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             repoTableView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
             repoTableView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
-            repoTableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            repoTableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
 
@@ -57,8 +56,7 @@ extension RepoViewController: RepoTableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") ?? UITableViewCell(style: .default, reuseIdentifier: "cell")
-        cell.textLabel?.text = "test"
+        let cell = RepoTableViewCell(cellData: CellData(profileImageData: nil, ownerName: "Owner Name", repositoryName: "Repository Name"))
         return cell
     }
     

@@ -18,24 +18,37 @@ struct RepoCellViewPreview_Previews: PreviewProvider {
         }
 
         func updateUIView(_ uiView: UIViewType, context: Context) {
-            guard let view = uiView as? RepoCellView else { return }
+            guard let view = uiView as? RepoTableViewCell else { return }
             view.refresh()
         }
         
         func makeUIView(context: Context) -> some UIView {
-            return RepoCellView(cellData: self.cellData)
+            return RepoTableViewCell(cellData: self.cellData)
         }
     }
     
     static var previews: some View {
         Group {
-            Wrapper(cellData: CellData(profileImageData: nil, ownerName: "fucchi-senpai", repositoryName: "GithubClientGithubClientGithubClientGithubClientGithubClient")).previewDisplayName("リポジトリ名が長い")
-            Wrapper(cellData: CellData(profileImageData: nil, ownerName: "fucchi-senpai", repositoryName: "G")).previewDisplayName("リポジトリ名が短い")
-            Wrapper(cellData: CellData(profileImageData: nil, ownerName: "fucchi-senpaifucchi-senpaifucchi-senpaifucchi-senpaifucchi-senpai", repositoryName: "GithubClient")).previewDisplayName("作者名が長い")
-            Wrapper(cellData: CellData(profileImageData: nil, ownerName: "f", repositoryName: "GithubClient")).previewDisplayName("作者名が短い")
+            Group {
+                Wrapper(cellData: CellData(profileImageData: nil, ownerName: "fucchi-senpai", repositoryName: "GithubClientGithubClientGithubClientGithubClientGithubClient")).previewDisplayName("リポジトリ名が長い")
+                Wrapper(cellData: CellData(profileImageData: nil, ownerName: "fucchi-senpai", repositoryName: "G")).previewDisplayName("リポジトリ名が短い")
+                Wrapper(cellData: CellData(profileImageData: nil, ownerName: "fucchi-senpaifucchi-senpaifucchi-senpaifucchi-senpaifucchi-senpai", repositoryName: "GithubClient")).previewDisplayName("作者名が長い")
+                Wrapper(cellData: CellData(profileImageData: nil, ownerName: "f", repositoryName: "GithubClient")).previewDisplayName("作者名が短い")
+                
+            }
+            .previewDisplayName("iPhone 11 pro")
+            .previewLayout(.fixed(width: 390, height: 78))
             
+            Group {
+                Wrapper(cellData: CellData(profileImageData: nil, ownerName: "fucchi-senpai", repositoryName: "GithubClientGithubClientGithubClientGithubClientGithubClient")).previewDisplayName("リポジトリ名が長い")
+                Wrapper(cellData: CellData(profileImageData: nil, ownerName: "fucchi-senpai", repositoryName: "G")).previewDisplayName("リポジトリ名が短い")
+                Wrapper(cellData: CellData(profileImageData: nil, ownerName: "fucchi-senpaifucchi-senpaifucchi-senpaifucchi-senpaifucchi-senpai", repositoryName: "GithubClient")).previewDisplayName("作者名が長い")
+                Wrapper(cellData: CellData(profileImageData: nil, ownerName: "f", repositoryName: "GithubClient")).previewDisplayName("作者名が短い")
+                
+            }
+            .previewDisplayName("iPad pro 11inch")
+            .previewLayout(.fixed(width: 834, height: 166.8))
         }
-        .previewLayout(.fixed(width: 480, height: 100))
     }
     static var platform: PreviewPlatform? = .iOS
 }
