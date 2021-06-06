@@ -10,6 +10,7 @@ import UIKit
 protocol RepoTableViewDelegate: AnyObject {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
 }
 
 class RepoTableView: UIView {
@@ -42,6 +43,10 @@ extension RepoTableView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return delegate?.tableView(tableView, cellForRowAt: indexPath) ?? UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        delegate?.tableView(tableView, didSelectRowAt: indexPath)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

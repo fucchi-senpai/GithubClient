@@ -24,6 +24,8 @@ class RepoDetailView: UIView {
     private let starNumber = UILabel()
     private let starUnitLabel = UILabel()
     
+    private let webViewLinkLabel = UITextView()
+    
     private var userData: CellData
     
     required init(userData: CellData) {
@@ -54,6 +56,7 @@ class RepoDetailView: UIView {
         initStarImageView()
         initStarNumber()
         initStarUnitLabel()
+        initWebViewLinkLabel()
     }
     
     private func initStackView() {
@@ -63,6 +66,7 @@ class RepoDetailView: UIView {
         stackView.addArrangedSubview(repositoryName)
         stackView.addArrangedSubview(aboutRepository)
         stackView.addArrangedSubview(starStackView)
+        stackView.addArrangedSubview(webViewLinkLabel)
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         stackView.alignment = .leading
@@ -152,5 +156,18 @@ class RepoDetailView: UIView {
         starUnitLabel.font = UIFont.systemFont(ofSize: 12.0)
     }
     
+    private func initWebViewLinkLabel() {
+        webViewLinkLabel.translatesAutoresizingMaskIntoConstraints = false
+        webViewLinkLabel.isSelectable = true
+        webViewLinkLabel.isEditable = false
+        let text = "See Code on Github"
+        let attribute = NSMutableAttributedString(string: text)
+        let range = NSString(string: text).range(of: text)
+        attribute.addAttribute(.link, value: "https://github.com/fucchi-senpai/GithubClient", range: range)
+        webViewLinkLabel.attributedText = attribute
+        NSLayoutConstraint.activate([
+            webViewLinkLabel.widthAnchor.constraint(equalTo: stackView.widthAnchor)
+        ])
+    }
     
 }

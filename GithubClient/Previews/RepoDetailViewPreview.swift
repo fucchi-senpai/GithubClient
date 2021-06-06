@@ -41,7 +41,7 @@ struct RepoDetailViewPreview_Previews: PreviewProvider {
                 Wrapper(userData: CellData(profileImageData: nil, ownerName: "fucchi-senpai", repositoryName: "GithubClient", aboutRepository: "This is repository Github Client", starCount: "99999999999999999999999999999999999999999"))
                     .previewDisplayName("スターがとんでもなく多い")
             }
-            .previewLayout(.fixed(width: 390, height: 200))
+            .previewLayout(.fixed(width: 390, height: 260))
         }
     }
 }
