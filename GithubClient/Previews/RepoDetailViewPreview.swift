@@ -31,6 +31,15 @@ struct RepoDetailViewPreview_Previews: PreviewProvider {
         Group {
             Group {
                 Wrapper(userData: CellData(profileImageData: nil, ownerName: "fucchi-senpai", repositoryName: "GithubClient", aboutRepository: "This is repository Github Client", starCount: "2"))
+                    .previewDisplayName("通常レイアウト")
+                Wrapper(userData: CellData(profileImageData: nil, ownerName: "fucchi-senpaifucchi-senpaifucchi-senpaifucchi-senpaifucchi-senpaifucchi-senpai", repositoryName: "GithubClient", aboutRepository: "This is repository Github Client", starCount: "2"))
+                    .previewDisplayName("作者名が長い")
+                Wrapper(userData: CellData(profileImageData: nil, ownerName: "fucchi-senpai", repositoryName: "GithubClientGithubClientGithubClientGithubClientGithubClientGithubClient", aboutRepository: "This is repository Github Client", starCount: "2"))
+                    .previewDisplayName("リポジトリ名が長い")
+                Wrapper(userData: CellData(profileImageData: nil, ownerName: "fucchi-senpai", repositoryName: "GithubClient", aboutRepository: "This is repository Github ClientThis is repository Github ClientThis is repository Github ClientThis is repository Github ClientThis is repository Github ClientThis is repository Github ClientThis is repository Github Client", starCount: "2"))
+                    .previewDisplayName("リポジトリ説明が長い")
+                Wrapper(userData: CellData(profileImageData: nil, ownerName: "fucchi-senpai", repositoryName: "GithubClient", aboutRepository: "This is repository Github Client", starCount: "99999999999999999999999999999999999999999"))
+                    .previewDisplayName("スターがとんでもなく多い")
             }
             .previewLayout(.fixed(width: 390, height: 200))
         }
