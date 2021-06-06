@@ -20,7 +20,7 @@ class RepoTableViewCell: UITableViewCell {
     
     init(cellData: CellData) {
         self.cellData = cellData
-        super.init(style: .default, reuseIdentifier: "repoCellView")
+        super.init(style: .default, reuseIdentifier: Const.CellReuseIdentifier.repoCellView)
     }
     
     required init?(coder: NSCoder) {
@@ -84,7 +84,7 @@ class RepoTableViewCell: UITableViewCell {
         if let imageData = cellData.profileImageData {
             profileImageView.image = UIImage(data: imageData)
         } else {
-            profileImageView.image = UIImage(systemName: "person.circle")
+            profileImageView.image = UIImage(named: Const.AssetsName.githubMark)
         }
         profileImageView.tintColor = .systemGray
         NSLayoutConstraint.activate([
@@ -97,7 +97,7 @@ class RepoTableViewCell: UITableViewCell {
         ownerLabel.translatesAutoresizingMaskIntoConstraints = false
         ownerLabel.text = "owner: \(cellData.ownerName)"
         ownerLabel.tintColor = .systemFill
-        ownerLabel.font = UIFont.systemFont(ofSize: 14.0)
+        ownerLabel.font = UIFont.systemFont(ofSize: 16.0)
         ownerLabel.numberOfLines = 1
         ownerLabel.lineBreakMode = .byTruncatingTail
     }
@@ -106,7 +106,7 @@ class RepoTableViewCell: UITableViewCell {
         repoNameLabel.translatesAutoresizingMaskIntoConstraints = false
         repoNameLabel.text = cellData.repositoryName
         repoNameLabel.tintColor = .systemFill
-        repoNameLabel.font = UIFont.systemFont(ofSize: 20.0)
+        repoNameLabel.font = UIFont.boldSystemFont(ofSize: 24.0)
         repoNameLabel.numberOfLines = 1
         repoNameLabel.lineBreakMode = .byTruncatingTail
     }

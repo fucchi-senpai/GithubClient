@@ -31,7 +31,14 @@ class RepoViewController: UIViewController {
     
     private func initView() {
         view.backgroundColor = .systemBackground
+        initNavigationView()
         initTableView()
+    }
+    
+    private func initNavigationView() {
+        self.navigationItem.title = Const.NavigationTitle.repoPage
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationController?.navigationItem.largeTitleDisplayMode = .always
     }
     
     private func initTableView() {
@@ -56,7 +63,7 @@ extension RepoViewController: RepoTableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "repoCellView") ?? RepoTableViewCell(cellData: CellData(profileImageData: nil, ownerName: "Owner Name", repositoryName: "Repository Name"))
+        let cell = tableView.dequeueReusableCell(withIdentifier: Const.CellReuseIdentifier.repoCellView) ?? RepoTableViewCell(cellData: CellData(profileImageData: nil, ownerName: "Owner Name", repositoryName: "Repository Name"))
         return cell
     }
     

@@ -45,6 +45,6 @@ extension RepoTableView: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return self.frame.width / 5
+        return self.frame.width / 4.5
     }
 }
