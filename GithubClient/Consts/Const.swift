@@ -12,6 +12,7 @@ struct Const {
     
     struct NavigationTitle {
         static let repoPage = "Repositories"
+        static let profilePage = "Profile"
     }
     
     struct AssetsName {
