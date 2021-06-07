@@ -25,7 +25,7 @@ class MainTabBarViewController: UITabBarController {
         
         let userData = CellData(profileImageData: nil, ownerName: "fucchi-senpai", repositoryName: "GithubClient", aboutRepository: "iOS Developer", starCount: "2")
         let secondViewController = ProfileViewController(profileView: ProfileView(userData: userData))
-        secondViewController.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person"), selectedImage: UIImage(systemName: "person"))
+        secondViewController.tabBarItem = UITabBarItem(title: Const.NavigationTitle.profilePage, image: UIImage(systemName: "person"), selectedImage: UIImage(systemName: "person"))
         viewcontrollers.append(secondViewController)
         
         viewcontrollers = viewcontrollers.map({ UINavigationController(rootViewController: $0) })

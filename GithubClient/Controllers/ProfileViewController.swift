@@ -26,6 +26,11 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        initView()
+    }
+    
+    private func initView() {
+        view.backgroundColor = .systemBackground
         initNavigationView()
         initProfileView()
     }
