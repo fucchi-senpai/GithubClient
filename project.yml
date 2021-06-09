@@ -15,6 +15,8 @@ targets:
     settings:
       base:
         INFOPLIST_FILE: GithubClient/Info.plist
+    dependencies:
+      - package: RxSwift
   GithubClientTests:
     type: bundle.unit-test
     platform: iOS
@@ -47,3 +49,8 @@ schemes:
       config: Debug
     archive:
       config: Release
+
+packages:
+  RxSwift:
+    url: https://github.com/ReactiveX/RxSwift.git
+    majorVersion: 6.2.0

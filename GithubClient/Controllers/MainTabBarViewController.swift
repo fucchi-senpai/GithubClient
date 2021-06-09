@@ -28,12 +28,20 @@ class MainTabBarViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // TODO: 見直し
-        DispatchQueue.global().async {
-            self.loadUser()
-        }
-        DispatchQueue.main.async {
-            self.initTabView()
-        }
+        self.githubModel?.response.subscribe(onNext: { data in
+            print("onNext")
+            self.setUpUserData(data: data)
+            DispatchQueue.main.async {
+                self.initTabView()
+            }
+        }, onError: { _ in
+            print("onError")
+        }, onCompleted: {
+            print("onComplete")
+        }, onDisposed: {
+            print("onDisposed")
+        })
+        self.loadUser()
     }
     
     private func initTabView() {
@@ -55,13 +63,17 @@ class MainTabBarViewController: UITabBarController {
     }
     
     private func loadUser() {
-        self.githubModel?.fetchGithubUser(userName: "fucchi-senpai") { data in
-            do {
-                self.userData = try JSONDecoder().decode(User.self, from: data)
-                print("decode success: \(String(describing: self.userData))")
-            } catch let err {
-                print("error: \(err)")
-            }
+//        let disposeBag = DisposeBag()
+//        subscribe?.disposed(by: disposeBag)
+        self.githubModel?.fetchGithubUser(userName: "fucchi-senpai")
+    }
+    
+    private func setUpUserData(data: Data) {
+        do {
+            self.userData = try JSONDecoder().decode(User.self, from: data)
+            print("decode success: \(String(describing: self.userData))")
+        } catch let err {
+            print("error: \(err)")
         }
     }
 
