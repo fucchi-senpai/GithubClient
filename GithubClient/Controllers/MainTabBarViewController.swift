@@ -6,11 +6,13 @@
 //
 
 import UIKit
+import RxSwift
 
 class MainTabBarViewController: UITabBarController {
     
     private var githubModel: GithubModel?
     private var userData: User? = nil
+    private var subscription: Disposable?
     
     init(githubModel: GithubModel) {
         self.githubModel = githubModel
@@ -28,20 +30,15 @@ class MainTabBarViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // TODO: 見直し
-        self.githubModel?.response.subscribe(onNext: { data in
-            print("onNext")
-            self.setUpUserData(data: data)
+        self.loadUser {
             DispatchQueue.main.async {
                 self.initTabView()
             }
-        }, onError: { _ in
-            print("onError")
-        }, onCompleted: {
-            print("onComplete")
-        }, onDisposed: {
-            print("onDisposed")
-        })
-        self.loadUser()
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        self.subscription?.dispose()
     }
     
     private func initTabView() {
@@ -62,10 +59,15 @@ class MainTabBarViewController: UITabBarController {
         self.setViewControllers(viewcontrollers, animated: true)
     }
     
-    private func loadUser() {
-//        let disposeBag = DisposeBag()
-//        subscribe?.disposed(by: disposeBag)
-        self.githubModel?.fetchGithubUser(userName: "fucchi-senpai")
+    private func loadUser(completion: @escaping () -> Void) {
+        let result = self.githubModel?.fetchGithubUser(userName: "fucchi-senpai")
+        self.subscription = result?.subscribe(onNext: { data in
+            print("onNext")
+            self.setUpUserData(data: data)
+            completion()
+        }, onDisposed: {
+            print("onDisposed")
+        })
     }
     
     private func setUpUserData(data: Data) {
