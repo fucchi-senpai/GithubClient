@@ -90,8 +90,8 @@ class RepoDetailView: UIView {
     
     private func initProfileImageView() {
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
-        if let profileImageData = self.userData.profileImageData {
-            profileImageView.image = UIImage(data: profileImageData)
+        if let url = self.userData.profileImageData {
+            profileImageView.image = UIImage().load(url: url)
         } else {
             profileImageView.image = UIImage(named: Const.AssetsName.githubMark)
         }

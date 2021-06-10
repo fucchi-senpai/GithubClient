@@ -10,9 +10,11 @@ import UIKit
 class RepoViewController: UIViewController {
     
     private var tableView: RepoTableView?
+    private var reposDataList: [Repos]
     
-    init(tableView: RepoTableView) {
+    init(tableView: RepoTableView, reposDataList: [Repos]) {
         self.tableView = tableView
+        self.reposDataList = reposDataList
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -59,16 +61,18 @@ class RepoViewController: UIViewController {
 extension RepoViewController: RepoTableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 50
+        return self.reposDataList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Const.CellReuseIdentifier.repoCellView) ?? RepoTableViewCell(cellData: CellData(profileImageData: nil, ownerName: "Owner Name", repositoryName: "Repository Name"))
+        let repos = self.reposDataList[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: Const.CellReuseIdentifier.repoCellView) ?? RepoTableViewCell(cellData: CellData(profileImageData: repos.owner.avatarUrl, ownerName: repos.owner.loginName, repositoryName: repos.name))
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let userData = CellData(profileImageData: nil, ownerName: "Owner Name", repositoryName: "Repository Name", aboutRepository: "This is repository", starCount: "100")
+        let repos = self.reposDataList[indexPath.row]
+        let userData = CellData(profileImageData: repos.owner.avatarUrl, ownerName: repos.owner.loginName, repositoryName: repos.name, aboutRepository: repos.description ?? "", starCount: String(repos.stargazersCount))
         let repoDetailView = RepoDetailView(userData: userData)
         self.navigationController?.pushViewController(RepoDetailViewController(repoDetailView: repoDetailView, navigationTitle: userData.repositoryName), animated: true)
     }

@@ -11,8 +11,10 @@ import RxSwift
 class MainTabBarViewController: UITabBarController {
     
     private var githubModel: GithubModel?
-    private var userData: User? = nil
     private var subscription: Disposable?
+    private var userData: User? = nil
+    private var reposList: [Repos] = []
+    private let requestUrl = "https://api.github.com/users/fucchi-senpai"
     
     init(githubModel: GithubModel) {
         self.githubModel = githubModel
@@ -30,7 +32,7 @@ class MainTabBarViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // TODO: 見直し
-        self.loadUser {
+        self.loadGithub {
             DispatchQueue.main.async {
                 self.initTabView()
             }
@@ -45,7 +47,7 @@ class MainTabBarViewController: UITabBarController {
         print(#function)
         var viewcontrollers: [UIViewController] = []
         
-        let firstViewController = RepoViewController(tableView: RepoTableView())
+        let firstViewController = RepoViewController(tableView: RepoTableView(), reposDataList: self.reposList)
         firstViewController.tabBarItem = UITabBarItem(title: Const.NavigationTitle.repoPage, image: UIImage(systemName: "list.bullet"), selectedImage: UIImage(systemName: "list.bullet"))
         viewcontrollers.append(firstViewController)
         
@@ -59,20 +61,35 @@ class MainTabBarViewController: UITabBarController {
         self.setViewControllers(viewcontrollers, animated: true)
     }
     
-    private func loadUser(completion: @escaping () -> Void) {
-        let result = self.githubModel?.fetchGithubUser(userName: "fucchi-senpai")
-        self.subscription = result?.subscribe(onNext: { data in
+    private func loadGithub(completion: @escaping () -> Void) {
+        let resultUser = self.githubModel?.fetchGithub(requestUrl: requestUrl)
+        let resultRepos = self.githubModel?.fetchGithub(requestUrl: "\(requestUrl)/repos")
+        
+        self.subscription = Observable.combineLatest(resultUser!, resultRepos!).subscribe(onNext: { userData, repos in
             print("onNext")
-            self.setUpUserData(data: data)
+            self.setUp(userData: userData)
+            self.setUp(reposData: repos)
             completion()
         }, onDisposed: {
             print("onDisposed")
         })
     }
     
-    private func setUpUserData(data: Data) {
+    private func setUp(userData: Data) {
         do {
-            self.userData = try JSONDecoder().decode(User.self, from: data)
+            self.userData = try JSONDecoder().decode(User.self, from: userData)
+            print("decode success: \(String(describing: self.userData))")
+        } catch let err {
+            print("error: \(err)")
+        }
+    }
+    
+    private func setUp(reposData: Data) {
+        do {
+            let dataList = try JSONDecoder().decode([Repos].self, from: reposData)
+            for data in dataList {
+                self.reposList.append(data)
+            }
             print("decode success: \(String(describing: self.userData))")
         } catch let err {
             print("error: \(err)")

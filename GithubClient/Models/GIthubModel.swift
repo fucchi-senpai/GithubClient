@@ -9,18 +9,16 @@ import Foundation
 import RxSwift
 
 protocol GithubModel {
-    func fetchGithubUser(userName: String) -> Observable<Data>
+    func fetchGithub(requestUrl: String) -> Observable<Data>
 }
 
 class GithubModelImpl: GithubModel {
     /// Githubユーザー情報を取得する
-    /// - Parameters:
-    ///   - userName: body Githubニックネーム
+    /// - Parameter requestUrl: リクエストURL
     /// - Returns: JSONデータ
-    func fetchGithubUser(userName: String) -> Observable<Data> {
+    func fetchGithub(requestUrl: String) -> Observable<Data> {
         return Observable.create({ observer in
-            // TODO: 検証用URL
-            guard let url = URL(string: "https://api.github.com/users/\(userName)") else { return Disposables.create() }
+            guard let url = URL(string: requestUrl) else { return Disposables.create() }
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
             let dataTask = URLSession.shared.dataTask(with: request) { (data, success, error) in
