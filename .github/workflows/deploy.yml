@@ -28,6 +28,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Cache Swift Package
+        uses: actions/cache@v2
+        with:
+          path: SourcePackages
+          key: ${{ runner.os }}-spm-${{ hashFiles('*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: ${{ runner.os }}-spm-
+
       - name: Xcode version
         run: xcodebuild -version
 
@@ -45,6 +52,7 @@ jobs:
           -scheme GithubClient
           -sdk iphonesimulator
           -configuration Debug
+          -clonedSourcePackagesDirPath SourcePackages
           -destination "platform=iOS Simulator,name=IPhone 12"
 
       - name: Run Unit Test
@@ -52,4 +60,5 @@ jobs:
           -scheme GithubClient
           -sdk iphonesimulator
           -configuration Debug
+          -clonedSourcePackagesDirPath SourcePackages
           -destination "platform=iOS Simulator,name=IPhone 12" | xcpretty
