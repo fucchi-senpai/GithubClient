@@ -7,7 +7,7 @@
 import Foundation
 
 struct CellData {
-    var profileImageData: String?
+    var profileImageUrl: String?
     var ownerName: String
     var repositoryName: String
     var aboutRepository: String = ""
