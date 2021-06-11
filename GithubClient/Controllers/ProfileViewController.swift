@@ -6,13 +6,16 @@
 //
 
 import UIKit
+import RxSwift
 
 class ProfileViewController: UIViewController {
     
-    private var profileView: ProfileView?
+    private var githubModel: GithubModel?
+    private var userData: UserEntity? = nil
+    private var subscription: Disposable? = nil
     
-    init(profileView: ProfileView) {
-        self.profileView = profileView
+    init(githubModel: GithubModel) {
+        self.githubModel = githubModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -26,7 +29,15 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        initView()
+        loadUser {
+            DispatchQueue.main.async {
+                self.initView()
+            }
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        self.subscription?.dispose()
     }
     
     private func initView() {
@@ -42,7 +53,8 @@ class ProfileViewController: UIViewController {
     }
     
     private func initProfileView() {
-        guard let profileView = profileView else { return }
+        guard let userData = self.userData else { return }
+        let profileView = ProfileView(userData: userData)
         self.view.addSubview(profileView)
         profileView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -51,6 +63,24 @@ class ProfileViewController: UIViewController {
             profileView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 16.0),
             profileView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
         ])
+    }
+    
+    private func loadUser(completion: @escaping () -> Void) {
+        let result = self.githubModel?.fetchGithub(requestUrl: "https://api.github.com/users/fucchi-senpai")
+        self.subscription = result?.subscribe(onNext: { data in
+            self.setUp(user: data)
+            completion()
+        })
+    }
+    
+    private func setUp(user: Data) {
+        do {
+            let data = try JSONDecoder().decode(User.self, from: user)
+            self.userData = UserEntity(profileImageUrl: data.avatarUrl, name: data.name, bio: data.bio)
+            print("decode success: \(String(describing: self.userData))")
+        } catch let err {
+            print("error: \(err)")
+        }
     }
 
 }

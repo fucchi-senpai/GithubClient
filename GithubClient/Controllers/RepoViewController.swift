@@ -6,15 +6,19 @@
 //
 
 import UIKit
+import RxSwift
 
 class RepoViewController: UIViewController {
     
     private var tableView: RepoTableView?
-    private var reposDataList: [Repos]
+    private var githubModel: GithubModel?
     
-    init(tableView: RepoTableView, reposDataList: [Repos]) {
+    private var reposDataList: [Repos] = []
+    private var subscription: Disposable? = nil
+    
+    init(tableView: RepoTableView, githubModel: GithubModel) {
         self.tableView = tableView
-        self.reposDataList = reposDataList
+        self.githubModel = githubModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -28,7 +32,15 @@ class RepoViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.initView()
+        self.loadRepositories {
+            DispatchQueue.main.async {
+                self.initView()
+            }
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        self.subscription?.dispose()
     }
     
     private func initView() {
@@ -54,6 +66,26 @@ class RepoViewController: UIViewController {
             repoTableView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
             repoTableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
         ])
+    }
+    
+    private func loadRepositories(completion: @escaping () -> Void) {
+        let result = self.githubModel?.fetchGithub(requestUrl: "https://api.github.com/users/fucchi-senpai/repos")
+        self.subscription = result?.subscribe(onNext: { data in
+            self.setUp(reposData: data)
+            completion()
+        })
+    }
+    
+    private func setUp(reposData: Data) {
+        do {
+            let dataList = try JSONDecoder().decode([Repos].self, from: reposData)
+            for data in dataList {
+                self.reposDataList.append(data)
+            }
+            print("decode success: \(String(describing: self.reposDataList))")
+        } catch let err {
+            print("error: \(err)")
+        }
     }
 
 }
