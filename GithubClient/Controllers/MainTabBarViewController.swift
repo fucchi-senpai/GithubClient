@@ -26,9 +26,7 @@ class MainTabBarViewController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        DispatchQueue.main.async {
-            self.initTabView()
-        }
+        self.initTabView()
     }
     
     private func initTabView() {

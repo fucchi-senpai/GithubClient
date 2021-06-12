@@ -8,16 +8,13 @@
 import UIKit
 import RxSwift
 
-protocol ProfileViewDelegate: AnyObject {
-    func loadUser(url: String, completion: @escaping () -> Void)
-}
-
 class ProfileViewController: UIViewController {
     
-    private weak var delegate: ProfileViewDelegate?
+    private weak var delegate: BaseViewDelegate?
     private var githubModel: GithubModel?
-    private var userData: UserEntity? = nil
+    
     private var subscription: Disposable? = nil
+    private var userData: UserEntity? = nil
     
     init(githubModel: GithubModel) {
         self.githubModel = githubModel
@@ -35,7 +32,8 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.delegate = self
-        self.delegate?.loadUser(url: "https://api.github.com/users/fucchi-senpai") {
+        self.delegate?.load(url: "https://api.github.com/users/fucchi-senpai") { data in
+            self.setUp(data: data)
             DispatchQueue.main.async {
                 self.initView()
             }
@@ -71,26 +69,25 @@ class ProfileViewController: UIViewController {
         ])
     }
     
-    private func setUp(user: Data) {
+}
+
+extension ProfileViewController: BaseViewDelegate {
+    
+    func load(url: String, completion: @escaping (Data) -> Void) {
+        let result = self.githubModel?.fetchGithub(requestUrl: url)
+        self.subscription = result?.subscribe(onNext: { data in
+            completion(data)
+        })
+    }
+    
+    func setUp(data: Data) {
         do {
-            let data = try JSONDecoder().decode(User.self, from: user)
-            self.userData = UserEntity(profileImageUrl: data.avatarUrl, name: data.name, bio: data.bio)
+            let user = try JSONDecoder().decode(User.self, from: data)
+            self.userData = UserEntity(profileImageUrl: user.avatarUrl, name: user.name, bio: user.bio)
             print("decode success: \(String(describing: self.userData))")
         } catch let err {
             print("error: \(err)")
         }
-    }
-
-}
-
-extension ProfileViewController: ProfileViewDelegate {
-    
-    func loadUser(url: String, completion: @escaping () -> Void) {
-        let result = self.githubModel?.fetchGithub(requestUrl: url)
-        self.subscription = result?.subscribe(onNext: { data in
-            self.setUp(user: data)
-            completion()
-        })
     }
     
 }

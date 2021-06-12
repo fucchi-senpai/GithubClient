@@ -8,15 +8,11 @@
 import UIKit
 import RxSwift
 
-protocol RepoViewDelegate: AnyObject {
-    func loadRepos(url: String, completion: @escaping () -> Void)
-}
-
 class RepoViewController: UIViewController {
     
-    private weak var delegate: RepoViewDelegate?
-    private var tableView: RepoTableView?
+    private weak var delegate: BaseViewDelegate?
     private var githubModel: GithubModel?
+    private var tableView: RepoTableView?
     
     private var reposDataList: [Repos] = []
     private var subscription: Disposable? = nil
@@ -38,7 +34,8 @@ class RepoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.delegate = self
-        self.delegate?.loadRepos(url: "https://api.github.com/users/fucchi-senpai/repos") {
+        self.delegate?.load(url: "https://api.github.com/users/fucchi-senpai/repos") { data in
+            self.setUp(data: data)
             DispatchQueue.main.async {
                 self.initView()
             }
@@ -73,18 +70,6 @@ class RepoViewController: UIViewController {
             repoTableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
-    
-    private func setUp(reposData: Data) {
-        do {
-            let dataList = try JSONDecoder().decode([Repos].self, from: reposData)
-            for data in dataList {
-                self.reposDataList.append(data)
-            }
-            print("decode success: \(String(describing: self.reposDataList))")
-        } catch let err {
-            print("error: \(err)")
-        }
-    }
 
 }
 
@@ -109,14 +94,25 @@ extension RepoViewController: RepoTableViewDelegate {
     
 }
 
-extension RepoViewController: RepoViewDelegate {
+extension RepoViewController: BaseViewDelegate {
     
-    func loadRepos(url: String, completion: @escaping () -> Void) {
+    func load(url: String, completion: @escaping (Data) -> Void) {
         let result = self.githubModel?.fetchGithub(requestUrl: url)
         self.subscription = result?.subscribe(onNext: { data in
-            self.setUp(reposData: data)
-            completion()
+            completion(data)
         })
+    }
+    
+    func setUp(data: Data) {
+        do {
+            let reposList = try JSONDecoder().decode([Repos].self, from: data)
+            for repos in reposList {
+                self.reposDataList.append(repos)
+            }
+            print("decode success: \(String(describing: self.reposDataList))")
+        } catch let err {
+            print("error: \(err)")
+        }
     }
     
 }
