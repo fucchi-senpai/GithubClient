@@ -77,6 +77,13 @@ extension ProfileViewController: BaseViewDelegate {
         let result = self.githubModel?.fetchGithub(requestUrl: url)
         self.subscription = result?.subscribe(onNext: { data in
             completion(data)
+        }, onError: { error in
+            print("error: \(error)")
+            DispatchQueue.main.async {
+                let action = UIAlertAction(title: Const.AlertContent.buttonLabel, style: .default, handler: nil)
+                let content = AlertContent(title: Const.AlertContent.title, message: Const.AlertContent.message, action: action)
+                UIAlertController.present(on: self, content)
+            }
         })
     }
     

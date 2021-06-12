@@ -18,4 +18,10 @@ struct Const {
     struct AssetsName {
         static let githubMark = "GitHubMark"
     }
+    
+    struct AlertContent {
+        static let title = "エラー"
+        static let message = "しばらく経ってから再度お試しください。"
+        static let buttonLabel = "OK"
+    }
 }
