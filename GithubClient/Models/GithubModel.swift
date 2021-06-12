@@ -1,5 +1,5 @@
 //
-//  GIthubModel.swift
+//  GithubModel.swift
 //  GithubClient
 //
 //  Created by Shota Fuchikami on 2021/06/08.
