@@ -13,7 +13,7 @@ extension UIImage {
     /// URLから画像を読み込む
     /// - Parameter url: URL
     /// - Returns: URLから読み込んだ画像
-    func load(url: String) -> UIImage? {
+    static func load(url: String) -> UIImage? {
         guard let url = URL(string: url) else {
             return nil
         }

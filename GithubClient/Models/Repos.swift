@@ -5,8 +5,6 @@
 //  Created by Shota Fuchikami on 2021/06/10.
 //
 
-import Foundation
-
 struct Repos: Decodable {
     var name: String
     var htmlUrl: String
