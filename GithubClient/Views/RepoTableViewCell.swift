@@ -81,8 +81,8 @@ class RepoTableViewCell: UITableViewCell {
     
     private func initProfileImageView() {
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
-        if let imageData = cellData.profileImageData {
-            profileImageView.image = UIImage(data: imageData)
+        if let url = cellData.profileImageUrl {
+            profileImageView.image = UIImage.load(url: url)
         } else {
             profileImageView.image = UIImage(named: Const.AssetsName.githubMark)
         }

@@ -6,13 +6,18 @@
 //
 
 import UIKit
+import RxSwift
 
 class ProfileViewController: UIViewController {
     
-    private var profileView: ProfileView?
+    private weak var delegate: BaseViewDelegate?
+    private var githubModel: GithubModel?
     
-    init(profileView: ProfileView) {
-        self.profileView = profileView
+    private var subscription: Disposable? = nil
+    private var userData: UserEntity? = nil
+    
+    init(githubModel: GithubModel) {
+        self.githubModel = githubModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -26,7 +31,17 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        initView()
+        self.delegate = self
+        self.delegate?.load(url: "https://api.github.com/users/fucchi-senpai") { data in
+            self.setUp(data: data)
+            DispatchQueue.main.async {
+                self.initView()
+            }
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        self.subscription?.dispose()
     }
     
     private func initView() {
@@ -42,7 +57,8 @@ class ProfileViewController: UIViewController {
     }
     
     private func initProfileView() {
-        guard let profileView = profileView else { return }
+        guard let userData = self.userData else { return }
+        let profileView = ProfileView(userData: userData)
         self.view.addSubview(profileView)
         profileView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -52,5 +68,33 @@ class ProfileViewController: UIViewController {
             profileView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
         ])
     }
+    
+}
 
+extension ProfileViewController: BaseViewDelegate {
+    
+    func load(url: String, completion: @escaping (Data) -> Void) {
+        let result = self.githubModel?.fetchGithub(requestUrl: url)
+        self.subscription = result?.subscribe(onNext: { data in
+            completion(data)
+        }, onError: { error in
+            print("error: \(error)")
+            DispatchQueue.main.async {
+                let action = UIAlertAction(title: Const.AlertContent.buttonLabel, style: .default, handler: nil)
+                let content = AlertContent(title: Const.AlertContent.title, message: Const.AlertContent.message, action: action)
+                UIAlertController.present(on: self, content)
+            }
+        })
+    }
+    
+    func setUp(data: Data) {
+        do {
+            let user = try JSONDecoder().decode(User.self, from: data)
+            self.userData = UserEntity(profileImageUrl: user.avatarUrl, name: user.name, bio: user.bio)
+            print("decode success: \(String(describing: self.userData))")
+        } catch let err {
+            print("error: \(err)")
+        }
+    }
+    
 }

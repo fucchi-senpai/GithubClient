@@ -9,22 +9,37 @@ import UIKit
 
 class MainTabBarViewController: UITabBarController {
     
+    private var githubModel: GithubModel?
+    
+    init(githubModel: GithubModel) {
+        self.githubModel = githubModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     deinit {
         print(#function)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.initTabView()
+    }
+    
+    private func initTabView() {
+        print(#function)
         var viewcontrollers: [UIViewController] = []
         
-        let firstViewController = RepoViewController(tableView: RepoTableView())
+        guard let githubModel = self.githubModel else { return }
+        
+        let firstViewController = RepoViewController(tableView: RepoTableView(), githubModel: githubModel)
         firstViewController.tabBarItem = UITabBarItem(title: Const.NavigationTitle.repoPage, image: UIImage(systemName: "list.bullet"), selectedImage: UIImage(systemName: "list.bullet"))
         viewcontrollers.append(firstViewController)
         
-        
-        let userData = CellData(profileImageData: nil, ownerName: "fucchi-senpai", repositoryName: "GithubClient", aboutRepository: "iOS Developer", starCount: "2")
-        let secondViewController = ProfileViewController(profileView: ProfileView(userData: userData))
+        let secondViewController = ProfileViewController(githubModel: githubModel)
         secondViewController.tabBarItem = UITabBarItem(title: Const.NavigationTitle.profilePage, image: UIImage(systemName: "person"), selectedImage: UIImage(systemName: "person"))
         viewcontrollers.append(secondViewController)
         

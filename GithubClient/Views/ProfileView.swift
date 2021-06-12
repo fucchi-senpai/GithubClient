@@ -16,9 +16,9 @@ class ProfileView: UIView {
     private var bio = UILabel()
     
     // TODO: CellDataはリポジトリリスト用データのため変更する
-    private var userData: CellData
+    private var userData: UserEntity
     
-    init(userData: CellData) {
+    init(userData: UserEntity) {
         self.userData = userData
         super.init(frame: .zero)
     }
@@ -69,8 +69,8 @@ class ProfileView: UIView {
     
     private func initProfileImageView() {
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
-        if let profileImageData = self.userData.profileImageData {
-            profileImageView.image = UIImage(data: profileImageData)
+        if let url = self.userData.profileImageUrl {
+            self.profileImageView.image = UIImage.load(url: url)
         } else {
             profileImageView.image = UIImage(named: Const.AssetsName.githubMark)
         }
@@ -81,14 +81,14 @@ class ProfileView: UIView {
     
     private func initUserName() {
         userName.translatesAutoresizingMaskIntoConstraints = false
-        userName.text = self.userData.ownerName
+        userName.text = self.userData.name
         userName.font = UIFont.systemFont(ofSize: 16.0)
         userName.lineBreakMode = .byTruncatingTail
     }
     
     private func initBio() {
         bio.translatesAutoresizingMaskIntoConstraints = false
-        bio.text = self.userData.aboutRepository
+        bio.text = self.userData.bio ?? ""
         bio.font = UIFont.systemFont(ofSize: 12.0)
         bio.lineBreakMode = .byTruncatingTail
     }

@@ -10,9 +10,9 @@ import SwiftUI
 struct ProfileViewPreview_Previews: PreviewProvider {
     struct Wrapper: UIViewRepresentable {
         
-        let userData: CellData
+        let userData: UserEntity
         
-        init(userData: CellData) {
+        init(userData: UserEntity) {
             self.userData = userData
         }
 
@@ -28,11 +28,11 @@ struct ProfileViewPreview_Previews: PreviewProvider {
     
     static var previews: some View {
         Group {
-            Wrapper(userData: CellData(profileImageData: nil, ownerName: "fucchi-senpai", repositoryName: "GithubClient", aboutRepository: "iOS Developer", starCount: "2"))
+            Wrapper(userData: UserEntity(profileImageUrl: "https://avatars.githubusercontent.com/u/53225198?v=4", name: "fucchi-senpai", bio: "iOS Developer"))
                 .previewDisplayName("通常レイアウト")
-            Wrapper(userData: CellData(profileImageData: nil, ownerName: "fucchi-senpaifucchi-senpaifucchi-senpaifucchi-senpaifucchi-senpaifucchi-senpai", repositoryName: "GithubClient", aboutRepository: "iOS Developer", starCount: "2"))
+            Wrapper(userData: UserEntity(profileImageUrl: "https://avatars.githubusercontent.com/u/53225198?v=4", name: "fucchi-senpaifucchi-senpaifucchi-senpaifucchi-senpaifucchi-senpaifucchi-senpai", bio: "iOS Developer"))
                 .previewDisplayName("作者名が長い")
-            Wrapper(userData: CellData(profileImageData: nil, ownerName: "fucchi-senpai", repositoryName: "GithubClient", aboutRepository: "iOS DeveloperiOS DeveloperiOS DeveloperiOS DeveloperiOS DeveloperiOS DeveloperiOS DeveloperiOS DeveloperiOS DeveloperiOS DeveloperiOS DeveloperiOS Developer", starCount: "2"))
+            Wrapper(userData: UserEntity(profileImageUrl: "https://avatars.githubusercontent.com/u/53225198?v=4", name: "fucchi-senpai", bio: "iOS DeveloperiOS DeveloperiOS DeveloperiOS DeveloperiOS DeveloperiOS DeveloperiOS DeveloperiOS DeveloperiOS Developer"))
                 .previewDisplayName("バイオが長い")
         }
         .previewLayout(.fixed(width: 390, height: 390 * 0.4))

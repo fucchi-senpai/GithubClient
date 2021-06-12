@@ -6,13 +6,20 @@
 //
 
 import UIKit
+import RxSwift
 
 class RepoViewController: UIViewController {
     
+    private weak var delegate: BaseViewDelegate?
+    private var githubModel: GithubModel?
     private var tableView: RepoTableView?
     
-    init(tableView: RepoTableView) {
+    private var reposDataList: [Repos] = []
+    private var subscription: Disposable? = nil
+    
+    init(tableView: RepoTableView, githubModel: GithubModel) {
         self.tableView = tableView
+        self.githubModel = githubModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -26,7 +33,17 @@ class RepoViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.initView()
+        self.delegate = self
+        self.delegate?.load(url: "https://api.github.com/users/fucchi-senpai/repos") { data in
+            self.setUp(data: data)
+            DispatchQueue.main.async {
+                self.initView()
+            }
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        self.subscription?.dispose()
     }
     
     private func initView() {
@@ -59,18 +76,50 @@ class RepoViewController: UIViewController {
 extension RepoViewController: RepoTableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 50
+        return self.reposDataList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Const.CellReuseIdentifier.repoCellView) ?? RepoTableViewCell(cellData: CellData(profileImageData: nil, ownerName: "Owner Name", repositoryName: "Repository Name"))
+        let repos = self.reposDataList[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: Const.CellReuseIdentifier.repoCellView) ?? RepoTableViewCell(cellData: CellData(profileImageUrl: repos.owner.avatarUrl, ownerName: repos.owner.loginName, repositoryName: repos.name))
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let userData = CellData(profileImageData: nil, ownerName: "Owner Name", repositoryName: "Repository Name", aboutRepository: "This is repository", starCount: "100")
+        let repos = self.reposDataList[indexPath.row]
+        let userData = CellData(profileImageUrl: repos.owner.avatarUrl, ownerName: repos.owner.loginName, repositoryName: repos.name, aboutRepository: repos.description ?? "", starCount: String(repos.stargazersCount))
         let repoDetailView = RepoDetailView(userData: userData)
         self.navigationController?.pushViewController(RepoDetailViewController(repoDetailView: repoDetailView, navigationTitle: userData.repositoryName), animated: true)
+    }
+    
+}
+
+extension RepoViewController: BaseViewDelegate {
+    
+    func load(url: String, completion: @escaping (Data) -> Void) {
+        let result = self.githubModel?.fetchGithub(requestUrl: url)
+        self.subscription = result?.subscribe(onNext: { data in
+            completion(data)
+        }, onError: { error in
+            print("error: \(error)")
+            DispatchQueue.main.async {
+                let action = UIAlertAction(title: Const.AlertContent.buttonLabel, style: .default, handler: nil)
+                let content = AlertContent(title: Const.AlertContent.title, message: Const.AlertContent.message, action: action)
+                UIAlertController.present(on: self, content)
+            }
+        })
+    }
+    
+    func setUp(data: Data) {
+        do {
+            let reposList = try JSONDecoder().decode([Repos].self, from: data)
+            for repos in reposList {
+                self.reposDataList.append(repos)
+            }
+            print("decode success: \(String(describing: self.reposDataList))")
+        } catch let err {
+            print("error: \(err)")
+        }
     }
     
 }

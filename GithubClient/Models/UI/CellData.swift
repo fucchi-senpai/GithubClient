@@ -4,10 +4,9 @@
 //
 //  Created by Shota Fuchikami on 2021/06/05.
 //
-import Foundation
 
 struct CellData {
-    var profileImageData: Data?
+    var profileImageUrl: String?
     var ownerName: String
     var repositoryName: String
     var aboutRepository: String = ""

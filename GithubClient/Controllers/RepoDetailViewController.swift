@@ -9,8 +9,8 @@ import UIKit
 
 class RepoDetailViewController: UIViewController {
     
+    private var navigationTitle: String?
     private var repoDetailView: RepoDetailView?
-    private var navigationTitle: String
     
     init(repoDetailView: RepoDetailView, navigationTitle: String) {
         self.repoDetailView = repoDetailView
