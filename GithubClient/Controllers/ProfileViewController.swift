@@ -8,8 +8,13 @@
 import UIKit
 import RxSwift
 
+protocol ProfileViewDelegate: AnyObject {
+    func loadUser(url: String, completion: @escaping () -> Void)
+}
+
 class ProfileViewController: UIViewController {
     
+    private weak var delegate: ProfileViewDelegate?
     private var githubModel: GithubModel?
     private var userData: UserEntity? = nil
     private var subscription: Disposable? = nil
@@ -29,7 +34,8 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadUser {
+        self.delegate = self
+        self.delegate?.loadUser(url: "https://api.github.com/users/fucchi-senpai") {
             DispatchQueue.main.async {
                 self.initView()
             }
@@ -65,14 +71,6 @@ class ProfileViewController: UIViewController {
         ])
     }
     
-    private func loadUser(completion: @escaping () -> Void) {
-        let result = self.githubModel?.fetchGithub(requestUrl: "https://api.github.com/users/fucchi-senpai")
-        self.subscription = result?.subscribe(onNext: { data in
-            self.setUp(user: data)
-            completion()
-        })
-    }
-    
     private func setUp(user: Data) {
         do {
             let data = try JSONDecoder().decode(User.self, from: user)
@@ -83,4 +81,16 @@ class ProfileViewController: UIViewController {
         }
     }
 
+}
+
+extension ProfileViewController: ProfileViewDelegate {
+    
+    func loadUser(url: String, completion: @escaping () -> Void) {
+        let result = self.githubModel?.fetchGithub(requestUrl: url)
+        self.subscription = result?.subscribe(onNext: { data in
+            self.setUp(user: data)
+            completion()
+        })
+    }
+    
 }

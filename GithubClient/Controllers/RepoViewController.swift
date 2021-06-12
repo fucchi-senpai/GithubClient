@@ -8,8 +8,13 @@
 import UIKit
 import RxSwift
 
+protocol RepoViewDelegate: AnyObject {
+    func loadRepos(url: String, completion: @escaping () -> Void)
+}
+
 class RepoViewController: UIViewController {
     
+    private weak var delegate: RepoViewDelegate?
     private var tableView: RepoTableView?
     private var githubModel: GithubModel?
     
@@ -32,7 +37,8 @@ class RepoViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.loadRepositories {
+        self.delegate = self
+        self.delegate?.loadRepos(url: "https://api.github.com/users/fucchi-senpai/repos") {
             DispatchQueue.main.async {
                 self.initView()
             }
@@ -68,14 +74,6 @@ class RepoViewController: UIViewController {
         ])
     }
     
-    private func loadRepositories(completion: @escaping () -> Void) {
-        let result = self.githubModel?.fetchGithub(requestUrl: "https://api.github.com/users/fucchi-senpai/repos")
-        self.subscription = result?.subscribe(onNext: { data in
-            self.setUp(reposData: data)
-            completion()
-        })
-    }
-    
     private func setUp(reposData: Data) {
         do {
             let dataList = try JSONDecoder().decode([Repos].self, from: reposData)
@@ -107,6 +105,18 @@ extension RepoViewController: RepoTableViewDelegate {
         let userData = CellData(profileImageUrl: repos.owner.avatarUrl, ownerName: repos.owner.loginName, repositoryName: repos.name, aboutRepository: repos.description ?? "", starCount: String(repos.stargazersCount))
         let repoDetailView = RepoDetailView(userData: userData)
         self.navigationController?.pushViewController(RepoDetailViewController(repoDetailView: repoDetailView, navigationTitle: userData.repositoryName), animated: true)
+    }
+    
+}
+
+extension RepoViewController: RepoViewDelegate {
+    
+    func loadRepos(url: String, completion: @escaping () -> Void) {
+        let result = self.githubModel?.fetchGithub(requestUrl: url)
+        self.subscription = result?.subscribe(onNext: { data in
+            self.setUp(reposData: data)
+            completion()
+        })
     }
     
 }
