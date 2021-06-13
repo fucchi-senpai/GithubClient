@@ -6,50 +6,27 @@
 //
 
 import UIKit
-import RxSwift
 
-class RepoViewController: UIViewController {
+class RepoViewController: BaseViewController {
     
-    private weak var delegate: BaseViewDelegate?
     private var githubModel: GithubModel?
     private var tableView: RepoTableView?
     
     private var reposDataList: [Repos] = []
-    private var subscription: Disposable? = nil
     
     init(tableView: RepoTableView, githubModel: GithubModel) {
         self.tableView = tableView
         self.githubModel = githubModel
-        super.init(nibName: nil, bundle: nil)
+        super.init(loadingView: LoadingView(), requestUrl: "https://api.github.com/users/fucchi-senpai/repos")
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    deinit {
-        print(#function)
-    }
 
     override func viewDidLoad() {
-        super.viewDidLoad()
         self.delegate = self
-        self.delegate?.load(url: "https://api.github.com/users/fucchi-senpai/repos") { data in
-            self.setUp(data: data)
-            DispatchQueue.main.async {
-                self.initView()
-            }
-        }
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        self.subscription?.dispose()
-    }
-    
-    private func initView() {
-        view.backgroundColor = .systemBackground
-        initNavigationView()
-        initTableView()
+        super.viewDidLoad()
     }
     
     private func initNavigationView() {
@@ -95,6 +72,11 @@ extension RepoViewController: RepoTableViewDelegate {
 }
 
 extension RepoViewController: BaseViewDelegate {
+    
+    func initViews() {
+        self.initNavigationView()
+        self.initTableView()
+    }
     
     func load(url: String, completion: @escaping (Data) -> Void) {
         let result = self.githubModel?.fetchGithub(requestUrl: url)

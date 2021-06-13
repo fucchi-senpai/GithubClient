@@ -6,48 +6,25 @@
 //
 
 import UIKit
-import RxSwift
 
-class ProfileViewController: UIViewController {
+class ProfileViewController: BaseViewController {
     
-    private weak var delegate: BaseViewDelegate?
     private var githubModel: GithubModel?
     
-    private var subscription: Disposable? = nil
     private var userData: UserEntity? = nil
     
     init(githubModel: GithubModel) {
         self.githubModel = githubModel
-        super.init(nibName: nil, bundle: nil)
+        super.init(loadingView: LoadingView(), requestUrl: "https://api.github.com/users/fucchi-senpai")
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        print(#function)
-    }
-    
     override func viewDidLoad() {
-        super.viewDidLoad()
         self.delegate = self
-        self.delegate?.load(url: "https://api.github.com/users/fucchi-senpai") { data in
-            self.setUp(data: data)
-            DispatchQueue.main.async {
-                self.initView()
-            }
-        }
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        self.subscription?.dispose()
-    }
-    
-    private func initView() {
-        view.backgroundColor = .systemBackground
-        initNavigationView()
-        initProfileView()
+        super.viewDidLoad()
     }
     
     private func initNavigationView() {
@@ -72,6 +49,11 @@ class ProfileViewController: UIViewController {
 }
 
 extension ProfileViewController: BaseViewDelegate {
+    
+    func initViews() {
+        self.initNavigationView()
+        self.initProfileView()
+    }
     
     func load(url: String, completion: @escaping (Data) -> Void) {
         let result = self.githubModel?.fetchGithub(requestUrl: url)
