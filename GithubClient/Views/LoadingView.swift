@@ -9,7 +9,7 @@ import UIKit
 
 class LoadingView: UIView {
     
-    private let loadingView: UIActivityIndicatorView = UIActivityIndicatorView(frame: .zero)
+    private let loadingView = UIActivityIndicatorView(frame: .zero)
 
     deinit {
         print(#function)
