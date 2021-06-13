@@ -9,7 +9,15 @@ import UIKit
 import RxSwift
 
 protocol BaseViewDelegate: AnyObject {
+    /// initialize views
+    func initViews()
+    /// load API
+    /// - Parameters:
+    ///   - url: requestURLl
+    ///   - completion: completion behavior
     func load(url: String, completion: @escaping (Data) -> Void)
+    /// set up data from API
+    /// - Parameter data: data from API
     func setUp(data: Data)
 }
 
@@ -53,9 +61,9 @@ open class BaseViewController: UIViewController {
         self.subscription?.dispose()
     }
     
-    // MARK: Open function
+    // MARK: Private function
     /// API読み込み前処理
-    open func beforeLoad() {
+    private func beforeLoad() {
         print(#function)
         DispatchQueue.main.async {
             self.view.backgroundColor = .systemBackground
@@ -65,20 +73,14 @@ open class BaseViewController: UIViewController {
     }
     
     /// API読み込み後処理
-    open func postLoad() {
+    private func postLoad() {
         print(#function)
         DispatchQueue.main.async {
-            self.initViews()
+            self.delegate?.initViews()
             self.loadingView?.stop()
         }
     }
     
-    /// Viewの初期化
-    open func initViews() {
-        print(#function)
-    }
-    
-    // MARK: Private function
     private func initLoadingView() {
         guard let loadingView = self.loadingView else { return }
         self.view.addSubview(loadingView)

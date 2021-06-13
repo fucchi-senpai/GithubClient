@@ -30,11 +30,6 @@ class RepoViewController: BaseViewController {
         super.viewDidLoad()
     }
     
-    override func initViews() {
-        initNavigationView()
-        initTableView()
-    }
-    
     private func initNavigationView() {
         self.navigationItem.title = Const.NavigationTitle.repoPage
         self.navigationController?.navigationBar.prefersLargeTitles = true
@@ -78,6 +73,11 @@ extension RepoViewController: RepoTableViewDelegate {
 }
 
 extension RepoViewController: BaseViewDelegate {
+    
+    func initViews() {
+        self.initNavigationView()
+        self.initTableView()
+    }
     
     func load(url: String, completion: @escaping (Data) -> Void) {
         let result = self.githubModel?.fetchGithub(requestUrl: url)

@@ -28,11 +28,6 @@ class ProfileViewController: BaseViewController {
         super.viewDidLoad()
     }
     
-    override func initViews() {
-        initNavigationView()
-        initProfileView()
-    }
-    
     private func initNavigationView() {
         self.navigationItem.title = Const.NavigationTitle.profilePage
         self.navigationController?.navigationBar.prefersLargeTitles = true
@@ -55,6 +50,11 @@ class ProfileViewController: BaseViewController {
 }
 
 extension ProfileViewController: BaseViewDelegate {
+    
+    func initViews() {
+        self.initNavigationView()
+        self.initProfileView()
+    }
     
     func load(url: String, completion: @escaping (Data) -> Void) {
         let result = self.githubModel?.fetchGithub(requestUrl: url)
