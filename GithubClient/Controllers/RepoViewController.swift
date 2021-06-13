@@ -12,7 +12,7 @@ class RepoViewController: BaseViewController {
     private var githubModel: GithubModel?
     private var tableView: RepoTableView?
     
-    private var reposDataList: [Repos] = []
+    var reposDataList: [Repos] = []
     
     init(tableView: RepoTableView, githubModel: GithubModel) {
         self.tableView = tableView
@@ -58,13 +58,13 @@ extension RepoViewController: RepoTableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let repos = self.reposDataList[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: Const.CellReuseIdentifier.repoCellView) ?? RepoTableViewCell(cellData: CellData(profileImageUrl: repos.owner.avatarUrl, ownerName: repos.owner.loginName, repositoryName: repos.name))
+        let cell = tableView.dequeueReusableCell(withIdentifier: Const.CellReuseIdentifier.repoCellView) ?? RepoTableViewCell(cellData: CellData(profileImageUrl: repos.owner.avatarUrl, ownerName: repos.owner.loginName ?? "No Owner Name", repositoryName: repos.name ?? "No Repos Name"))
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let repos = self.reposDataList[indexPath.row]
-        let userData = CellData(profileImageUrl: repos.owner.avatarUrl, ownerName: repos.owner.loginName, repositoryName: repos.name, aboutRepository: repos.description ?? "", starCount: String(repos.stargazersCount))
+        let userData = CellData(profileImageUrl: repos.owner.avatarUrl, ownerName: repos.owner.loginName ?? "No Owner Name", repositoryName: repos.name ?? "No Repos Name", aboutRepository: repos.description ?? "", starCount: String(repos.stargazersCount))
         let repoDetailView = RepoDetailView(userData: userData)
         self.navigationController?.pushViewController(RepoDetailViewController(repoDetailView: repoDetailView, navigationTitle: userData.repositoryName), animated: true)
     }

@@ -25,6 +25,9 @@ targets:
     settings:
       base:
         INFOPLIST_FILE: GithubClientTests/Info.plist
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/GithubClient.app/GithubClient"
+    dependencies:
+      - package: RxSwift
   GithubClientUITests:
     type: bundle.ui-testing
     platform: iOS
@@ -43,6 +46,9 @@ schemes:
       config: Debug
     test:
       config: Debug
+      testTargets:
+        - GithubClientTests
+        - GithubClientUITests
     profile:
       config: Release
     analyze:
