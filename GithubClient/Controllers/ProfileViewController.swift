@@ -8,60 +8,27 @@
 import UIKit
 import RxSwift
 
-class ProfileViewController: UIViewController {
+class ProfileViewController: BaseViewController {
     
-    private weak var delegate: BaseViewDelegate?
     private var githubModel: GithubModel?
-    private var loadingView: LoadingView?
     
-    private var subscription: Disposable? = nil
     private var userData: UserEntity? = nil
     
-    init(githubModel: GithubModel, loadingView: LoadingView) {
+    init(githubModel: GithubModel) {
         self.githubModel = githubModel
-        self.loadingView = loadingView
-        super.init(nibName: nil, bundle: nil)
+        super.init(loadingView: LoadingView(), requestUrl: "https://api.github.com/users/fucchi-senpai")
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        print(#function)
-    }
-    
     override func viewDidLoad() {
-        super.viewDidLoad()
         self.delegate = self
-        self.beforeLoad()
-        self.delegate?.load(url: "https://api.github.com/users/fucchi-senpai") { data in
-            self.setUp(data: data)
-            self.postLoad()
-        }
+        super.viewDidLoad()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        self.subscription?.dispose()
-    }
-    
-    private func beforeLoad() {
-        DispatchQueue.main.async {
-            self.view.backgroundColor = .systemBackground
-            self.initLoadingView()
-            self.loadingView?.start()
-        }
-    }
-    
-    private func postLoad() {
-        DispatchQueue.main.async {
-            self.initView()
-            self.loadingView?.stop()
-        }
-    }
-    
-    private func initView() {
-        view.backgroundColor = .systemBackground
+    override func initViews() {
         initNavigationView()
         initProfileView()
     }
@@ -82,18 +49,6 @@ class ProfileViewController: UIViewController {
             profileView.widthAnchor.constraint(equalTo: self.view.widthAnchor),
             profileView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 16.0),
             profileView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
-        ])
-    }
-    
-    private func initLoadingView() {
-        guard let loadingView = self.loadingView else { return }
-        self.view.addSubview(loadingView)
-        loadingView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            loadingView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.2),
-            loadingView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.2),
-            loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-            loadingView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
         ])
     }
     
