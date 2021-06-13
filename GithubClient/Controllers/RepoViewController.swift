@@ -12,14 +12,16 @@ class RepoViewController: UIViewController {
     
     private weak var delegate: BaseViewDelegate?
     private var githubModel: GithubModel?
+    private var loadingView: LoadingView?
     private var tableView: RepoTableView?
     
     private var reposDataList: [Repos] = []
     private var subscription: Disposable? = nil
     
-    init(tableView: RepoTableView, githubModel: GithubModel) {
+    init(tableView: RepoTableView, githubModel: GithubModel, loadingView: LoadingView) {
         self.tableView = tableView
         self.githubModel = githubModel
+        self.loadingView = loadingView
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -34,11 +36,10 @@ class RepoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.delegate = self
+        self.beforeLoad()
         self.delegate?.load(url: "https://api.github.com/users/fucchi-senpai/repos") { data in
             self.setUp(data: data)
-            DispatchQueue.main.async {
-                self.initView()
-            }
+            self.postLoad()
         }
     }
     
@@ -46,8 +47,22 @@ class RepoViewController: UIViewController {
         self.subscription?.dispose()
     }
     
+    private func beforeLoad() {
+        DispatchQueue.main.async {
+            self.view.backgroundColor = .systemBackground
+            self.initLoadingView()
+            self.loadingView?.start()
+        }
+    }
+    
+    private func postLoad() {
+        DispatchQueue.main.async {
+            self.initView()
+            self.loadingView?.stop()
+        }
+    }
+    
     private func initView() {
-        view.backgroundColor = .systemBackground
         initNavigationView()
         initTableView()
     }
@@ -68,6 +83,18 @@ class RepoViewController: UIViewController {
             repoTableView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
             repoTableView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
             repoTableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
+    
+    private func initLoadingView() {
+        guard let loadingView = self.loadingView else { return }
+        self.view.addSubview(loadingView)
+        loadingView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            loadingView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.2),
+            loadingView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.2),
+            loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            loadingView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
         ])
     }
 

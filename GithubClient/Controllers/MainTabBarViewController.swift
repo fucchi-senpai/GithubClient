@@ -26,6 +26,7 @@ class MainTabBarViewController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = .systemBackground
         self.initTabView()
     }
     
@@ -35,11 +36,11 @@ class MainTabBarViewController: UITabBarController {
         
         guard let githubModel = self.githubModel else { return }
         
-        let firstViewController = RepoViewController(tableView: RepoTableView(), githubModel: githubModel)
+        let firstViewController = RepoViewController(tableView: RepoTableView(), githubModel: githubModel, loadingView: LoadingView())
         firstViewController.tabBarItem = UITabBarItem(title: Const.NavigationTitle.repoPage, image: UIImage(systemName: "list.bullet"), selectedImage: UIImage(systemName: "list.bullet"))
         viewcontrollers.append(firstViewController)
         
-        let secondViewController = ProfileViewController(githubModel: githubModel)
+        let secondViewController = ProfileViewController(githubModel: githubModel, loadingView: LoadingView())
         secondViewController.tabBarItem = UITabBarItem(title: Const.NavigationTitle.profilePage, image: UIImage(systemName: "person"), selectedImage: UIImage(systemName: "person"))
         viewcontrollers.append(secondViewController)
         
