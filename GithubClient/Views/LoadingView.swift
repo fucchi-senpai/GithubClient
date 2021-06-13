@@ -33,8 +33,8 @@ class LoadingView: UIView {
     
     private func initLoadingView() {
         addSubview(loadingView)
-        loadingView.style = .medium
-        loadingView.color = .gray
+        loadingView.style = .large
+        loadingView.color = .systemGray
         loadingView.hidesWhenStopped = true
         loadingView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
