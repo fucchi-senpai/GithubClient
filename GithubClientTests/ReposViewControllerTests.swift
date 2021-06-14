@@ -18,67 +18,65 @@ class ReposViewControllerTests: XCTestCase {
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
-
-    func testRepos() throws {
-        XCTContext.runActivity(named: "success response", block: { _ in
-            let vc = RepoViewController(tableView: RepoTableView(), githubModel: GithubModelTest())
-            vc.view.layoutIfNeeded()
-            vc.delegate?.load(url: "") { data in
-                vc.delegate?.setUp(data: data)
-                let owner = Repos.User(loginName: MockData.Sample.loginName, avatarUrl: MockData.Sample.avatorUrl, bio: MockData.Sample.bio, url: MockData.Sample.url)
-                let expect = Repos(name: MockData.Sample.reposName, htmlUrl: MockData.Sample.htmlUrl, description: MockData.Sample.description, stargazersCount: MockData.Sample.starCount, owner: owner)
-                guard let actual = vc.reposDataList.first else {
-                    return
-                }
-                XCTAssertEqual(expect, actual)
+    
+    func testReposEqualityTest_fromGithubAPI_withSuccessfulResponse() {
+        let vc = RepoViewController(tableView: RepoTableView(), githubModel: GithubModelTest())
+        vc.view.layoutIfNeeded()
+        vc.delegate?.load(url: "") { data in
+            vc.delegate?.setUp(data: data)
+            let owner = Repos.User(loginName: MockData.Sample.loginName, avatarUrl: MockData.Sample.avatorUrl, bio: MockData.Sample.bio, url: MockData.Sample.url)
+            let expect = Repos(name: MockData.Sample.reposName, htmlUrl: MockData.Sample.htmlUrl, description: MockData.Sample.description, stargazersCount: MockData.Sample.starCount, owner: owner)
+            guard let actual = vc.reposDataList.first else {
+                return
             }
-        })
-        
-        XCTContext.runActivity(named: "avatar url is nil", block: { _ in
-            let vc = RepoViewController(tableView: RepoTableView(), githubModel: GithubModelTest2())
-            vc.view.layoutIfNeeded()
-            vc.delegate?.load(url: "") { data in
-                vc.delegate?.setUp(data: data)
-                let owner = Repos.User(loginName: MockData.Sample.loginName, avatarUrl: nil, bio: MockData.Sample.bio, url: MockData.Sample.url)
-                let expect = Repos(name: MockData.Sample.reposName, htmlUrl: MockData.Sample.htmlUrl, description: MockData.Sample.description, stargazersCount: MockData.Sample.starCount, owner: owner)
-                guard let actual = vc.reposDataList.first else {
-                    return
-                }
-                XCTAssertEqual(expect, actual)
+            XCTAssertEqual(expect, actual)
+        }
+    }
+    
+    func testReposEqualityTest_fromGithubAPI_withAvatarUrlIsNil() {
+        let vc = RepoViewController(tableView: RepoTableView(), githubModel: GithubModelTest2())
+        vc.view.layoutIfNeeded()
+        vc.delegate?.load(url: "") { data in
+            vc.delegate?.setUp(data: data)
+            let owner = Repos.User(loginName: MockData.Sample.loginName, avatarUrl: nil, bio: MockData.Sample.bio, url: MockData.Sample.url)
+            let expect = Repos(name: MockData.Sample.reposName, htmlUrl: MockData.Sample.htmlUrl, description: MockData.Sample.description, stargazersCount: MockData.Sample.starCount, owner: owner)
+            guard let actual = vc.reposDataList.first else {
+                return
             }
-        })
-        
-        XCTContext.runActivity(named: "owner name is nil", block: { _ in
-            let vc = RepoViewController(tableView: RepoTableView(), githubModel: GithubModelTest3())
-            vc.view.layoutIfNeeded()
-            vc.delegate?.load(url: "") { data in
-                vc.delegate?.setUp(data: data)
-                let owner = Repos.User(loginName: nil, avatarUrl: MockData.Sample.avatorUrl, bio: MockData.Sample.bio, url: MockData.Sample.url)
-                let expect = Repos(name: MockData.Sample.reposName, htmlUrl: MockData.Sample.htmlUrl, description: MockData.Sample.description, stargazersCount: MockData.Sample.starCount, owner: owner)
-                guard let actual = vc.reposDataList.first else {
-                    return
-                }
-                XCTAssertEqual(expect, actual)
+            XCTAssertEqual(expect, actual)
+        }
+    }
+    
+    func testReposEqualityTest_fromGithubAPI_withOwnerNameIsNil() {
+        let vc = RepoViewController(tableView: RepoTableView(), githubModel: GithubModelTest3())
+        vc.view.layoutIfNeeded()
+        vc.delegate?.load(url: "") { data in
+            vc.delegate?.setUp(data: data)
+            let owner = Repos.User(loginName: nil, avatarUrl: MockData.Sample.avatorUrl, bio: MockData.Sample.bio, url: MockData.Sample.url)
+            let expect = Repos(name: MockData.Sample.reposName, htmlUrl: MockData.Sample.htmlUrl, description: MockData.Sample.description, stargazersCount: MockData.Sample.starCount, owner: owner)
+            guard let actual = vc.reposDataList.first else {
+                return
             }
-        })
-        
-        XCTContext.runActivity(named: "repositories name is nil", block: { _ in
-            let vc = RepoViewController(tableView: RepoTableView(), githubModel: GithubModelTest4())
-            vc.view.layoutIfNeeded()
-            vc.delegate?.load(url: "") { data in
-                vc.delegate?.setUp(data: data)
-                let owner = Repos.User(loginName: MockData.Sample.loginName, avatarUrl: MockData.Sample.avatorUrl, bio: MockData.Sample.bio, url: MockData.Sample.url)
-                let expect = Repos(name: nil, htmlUrl: MockData.Sample.htmlUrl, description: MockData.Sample.description, stargazersCount: MockData.Sample.starCount, owner: owner)
-                guard let actual = vc.reposDataList.first else {
-                    return
-                }
-                XCTAssertEqual(expect, actual)
+            XCTAssertEqual(expect, actual)
+        }
+    }
+    
+    func testReposEqualityTest_fromGithubAPI_withReposNameIsNil() {
+        let vc = RepoViewController(tableView: RepoTableView(), githubModel: GithubModelTest4())
+        vc.view.layoutIfNeeded()
+        vc.delegate?.load(url: "") { data in
+            vc.delegate?.setUp(data: data)
+            let owner = Repos.User(loginName: MockData.Sample.loginName, avatarUrl: MockData.Sample.avatorUrl, bio: MockData.Sample.bio, url: MockData.Sample.url)
+            let expect = Repos(name: nil, htmlUrl: MockData.Sample.htmlUrl, description: MockData.Sample.description, stargazersCount: MockData.Sample.starCount, owner: owner)
+            guard let actual = vc.reposDataList.first else {
+                return
             }
-        })
-        
-        XCTContext.runActivity(named: "error response", block: { _ in
-            // TODO: Not Implementation yet
-        })
+            XCTAssertEqual(expect, actual)
+        }
+    }
+    
+    func testReposEqualityTest_fromGithubAPI_withErrorResponse() {
+        // TODO: Not Implementation yet
     }
 }
 
