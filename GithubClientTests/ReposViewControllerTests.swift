@@ -20,12 +20,13 @@ class ReposViewControllerTests: XCTestCase {
     }
     
     func testReposEqualityTest_fromGithubAPI_withSuccessfulResponse() {
-        let vc = RepoViewController(tableView: RepoTableView(), githubModel: GithubModelTest())
+        let githubModel = GithubModelTestRepos(mock: ReposVCTestMockData.success)
+        let vc = RepoViewController(tableView: RepoTableView(), githubModel: githubModel)
         vc.view.layoutIfNeeded()
         vc.delegate?.load(url: "") { data in
             vc.delegate?.setUp(data: data)
-            let owner = Repos.User(loginName: MockData.Sample.loginName, avatarUrl: MockData.Sample.avatorUrl, bio: MockData.Sample.bio, url: MockData.Sample.url)
-            let expect = Repos(name: MockData.Sample.reposName, htmlUrl: MockData.Sample.htmlUrl, description: MockData.Sample.description, stargazersCount: MockData.Sample.starCount, owner: owner)
+            let owner = Repos.User(loginName: ReposVCTestMockData.Const.loginName, avatarUrl: ReposVCTestMockData.Const.avatorUrl, bio: ReposVCTestMockData.Const.bio, url: ReposVCTestMockData.Const.url)
+            let expect = Repos(name: ReposVCTestMockData.Const.reposName, htmlUrl: ReposVCTestMockData.Const.htmlUrl, description: ReposVCTestMockData.Const.description, stargazersCount: ReposVCTestMockData.Const.starCount, owner: owner)
             guard let actual = vc.reposDataList.first else {
                 return
             }
@@ -34,12 +35,13 @@ class ReposViewControllerTests: XCTestCase {
     }
     
     func testReposEqualityTest_fromGithubAPI_withAvatarUrlIsNil() {
-        let vc = RepoViewController(tableView: RepoTableView(), githubModel: GithubModelTest2())
+        let githubModel = GithubModelTestRepos(mock: ReposVCTestMockData.avatarNil)
+        let vc = RepoViewController(tableView: RepoTableView(), githubModel: githubModel)
         vc.view.layoutIfNeeded()
         vc.delegate?.load(url: "") { data in
             vc.delegate?.setUp(data: data)
-            let owner = Repos.User(loginName: MockData.Sample.loginName, avatarUrl: nil, bio: MockData.Sample.bio, url: MockData.Sample.url)
-            let expect = Repos(name: MockData.Sample.reposName, htmlUrl: MockData.Sample.htmlUrl, description: MockData.Sample.description, stargazersCount: MockData.Sample.starCount, owner: owner)
+            let owner = Repos.User(loginName: ReposVCTestMockData.Const.loginName, avatarUrl: nil, bio: ReposVCTestMockData.Const.bio, url: ReposVCTestMockData.Const.url)
+            let expect = Repos(name: ReposVCTestMockData.Const.reposName, htmlUrl: ReposVCTestMockData.Const.htmlUrl, description: ReposVCTestMockData.Const.description, stargazersCount: ReposVCTestMockData.Const.starCount, owner: owner)
             guard let actual = vc.reposDataList.first else {
                 return
             }
@@ -48,12 +50,13 @@ class ReposViewControllerTests: XCTestCase {
     }
     
     func testReposEqualityTest_fromGithubAPI_withOwnerNameIsNil() {
-        let vc = RepoViewController(tableView: RepoTableView(), githubModel: GithubModelTest3())
+        let githubModel = GithubModelTestRepos(mock: ReposVCTestMockData.ownerNameNil)
+        let vc = RepoViewController(tableView: RepoTableView(), githubModel: githubModel)
         vc.view.layoutIfNeeded()
         vc.delegate?.load(url: "") { data in
             vc.delegate?.setUp(data: data)
-            let owner = Repos.User(loginName: nil, avatarUrl: MockData.Sample.avatorUrl, bio: MockData.Sample.bio, url: MockData.Sample.url)
-            let expect = Repos(name: MockData.Sample.reposName, htmlUrl: MockData.Sample.htmlUrl, description: MockData.Sample.description, stargazersCount: MockData.Sample.starCount, owner: owner)
+            let owner = Repos.User(loginName: nil, avatarUrl: ReposVCTestMockData.Const.avatorUrl, bio: ReposVCTestMockData.Const.bio, url: ReposVCTestMockData.Const.url)
+            let expect = Repos(name: ReposVCTestMockData.Const.reposName, htmlUrl: ReposVCTestMockData.Const.htmlUrl, description: ReposVCTestMockData.Const.description, stargazersCount: ReposVCTestMockData.Const.starCount, owner: owner)
             guard let actual = vc.reposDataList.first else {
                 return
             }
@@ -62,12 +65,13 @@ class ReposViewControllerTests: XCTestCase {
     }
     
     func testReposEqualityTest_fromGithubAPI_withReposNameIsNil() {
-        let vc = RepoViewController(tableView: RepoTableView(), githubModel: GithubModelTest4())
+        let githubModel = GithubModelTestRepos(mock: ReposVCTestMockData.reposNameNil)
+        let vc = RepoViewController(tableView: RepoTableView(), githubModel: githubModel)
         vc.view.layoutIfNeeded()
         vc.delegate?.load(url: "") { data in
             vc.delegate?.setUp(data: data)
-            let owner = Repos.User(loginName: MockData.Sample.loginName, avatarUrl: MockData.Sample.avatorUrl, bio: MockData.Sample.bio, url: MockData.Sample.url)
-            let expect = Repos(name: nil, htmlUrl: MockData.Sample.htmlUrl, description: MockData.Sample.description, stargazersCount: MockData.Sample.starCount, owner: owner)
+            let owner = Repos.User(loginName: ReposVCTestMockData.Const.loginName, avatarUrl: ReposVCTestMockData.Const.avatorUrl, bio: ReposVCTestMockData.Const.bio, url: ReposVCTestMockData.Const.url)
+            let expect = Repos(name: nil, htmlUrl: ReposVCTestMockData.Const.htmlUrl, description: ReposVCTestMockData.Const.description, stargazersCount: ReposVCTestMockData.Const.starCount, owner: owner)
             guard let actual = vc.reposDataList.first else {
                 return
             }
@@ -83,49 +87,17 @@ class ReposViewControllerTests: XCTestCase {
 
 // MARK: Test Model
 
-final class GithubModelTest: GithubModel {
-    func fetchGithub(requestUrl: String) -> Observable<Data> {
-        return Observable.create({ observer in
-            guard let data = MockData.success.data(using: .utf8) else {
-                return Disposables.create()
-            }
-            observer.on(.next(data))
-            observer.on(.completed)
-            return Disposables.create()
-        })
+final class GithubModelTestRepos: GithubModel {
+    
+    private var mock: String
+    
+    init(mock: String) {
+        self.mock = mock
     }
-}
-
-final class GithubModelTest2: GithubModel {
+    
     func fetchGithub(requestUrl: String) -> Observable<Data> {
         return Observable.create({ observer in
-            guard let data = MockData.avatarNil.data(using: .utf8) else {
-                return Disposables.create()
-            }
-            observer.on(.next(data))
-            observer.on(.completed)
-            return Disposables.create()
-        })
-    }
-}
-
-final class GithubModelTest3: GithubModel {
-    func fetchGithub(requestUrl: String) -> Observable<Data> {
-        return Observable.create({ observer in
-            guard let data = MockData.ownerNameNil.data(using: .utf8) else {
-                return Disposables.create()
-            }
-            observer.on(.next(data))
-            observer.on(.completed)
-            return Disposables.create()
-        })
-    }
-}
-
-final class GithubModelTest4: GithubModel {
-    func fetchGithub(requestUrl: String) -> Observable<Data> {
-        return Observable.create({ observer in
-            guard let data = MockData.reposNameNil.data(using: .utf8) else {
+            guard let data = self.mock.data(using: .utf8) else {
                 return Disposables.create()
             }
             observer.on(.next(data))
@@ -137,9 +109,9 @@ final class GithubModelTest4: GithubModel {
 
 // MARK: Mock Data
 
-struct MockData {
+struct ReposVCTestMockData {
     
-    struct Sample {
+    struct Const {
         static let reposName = "GithubClient"
         static let htmlUrl = "https://github.com/fucchi-senpai/GithubClient"
         static let description = "This is for test"

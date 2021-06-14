@@ -81,6 +81,8 @@ class ProfileViewControllerTests: XCTestCase {
 
 }
 
+// MARK: Test Model
+
 final class GithubModelTestProfile: GithubModel {
     
     private var mock: String
@@ -100,6 +102,8 @@ final class GithubModelTestProfile: GithubModel {
         })
     }
 }
+
+// MARK: Mock Data
 
 struct ProfileVCTestMockData {
     
