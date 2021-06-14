@@ -80,7 +80,13 @@ class ReposViewControllerTests: XCTestCase {
     }
     
     func testReposEqualityTest_fromGithubAPI_withErrorResponse() {
-        // TODO: Not Implementation yet
+        let githubModel = GithubModelTestRepos(mock: ReposVCTestMockData.error)
+        let vc = RepoViewController(tableView: RepoTableView(), githubModel: githubModel)
+        vc.view.layoutIfNeeded()
+        vc.delegate?.load(url: "") { data in
+            vc.delegate?.setUp(data: data)
+            XCTAssertNil(vc.reposDataList.first)
+        }
     }
 }
 
@@ -218,4 +224,5 @@ struct ReposVCTestMockData {
     ]
     """
     
+    static let error = "[{}]"
 }

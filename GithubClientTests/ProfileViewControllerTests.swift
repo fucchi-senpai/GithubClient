@@ -76,7 +76,13 @@ class ProfileViewControllerTests: XCTestCase {
     }
     
     func testProfileEqualityTest_fromGithubAPI_withErrorResponse() {
-        // TODO: Not Implementation yet
+        let githubModel = GithubModelTestProfile(mock: ProfileVCTestMockData.error)
+        let vc = ProfileViewController(githubModel: githubModel)
+        vc.view.layoutIfNeeded()
+        vc.delegate?.load(url: "") { data in
+            vc.delegate?.setUp(data: data)
+            XCTAssertNil(vc.userData)
+        }
     }
 
 }
@@ -166,4 +172,6 @@ struct ProfileVCTestMockData {
         "bio": null
     }
     """
+    
+    static let error = "{}"
 }
