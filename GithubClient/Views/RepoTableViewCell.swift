@@ -95,7 +95,7 @@ class RepoTableViewCell: UITableViewCell {
     
     private func initOwnerNameLabel() {
         ownerLabel.translatesAutoresizingMaskIntoConstraints = false
-        ownerLabel.text = "owner: \(cellData.ownerName)"
+        ownerLabel.text = "owner: \(cellData.ownerName ?? Const.Optional.noOwnerName)"
         ownerLabel.tintColor = .systemFill
         ownerLabel.font = UIFont.systemFont(ofSize: 16.0)
         ownerLabel.numberOfLines = 1
@@ -104,7 +104,7 @@ class RepoTableViewCell: UITableViewCell {
     
     private func initRepoNameLabel() {
         repoNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        repoNameLabel.text = cellData.repositoryName
+        repoNameLabel.text = cellData.repositoryName ?? Const.Optional.noReposName
         repoNameLabel.tintColor = .systemFill
         repoNameLabel.font = UIFont.boldSystemFont(ofSize: 24.0)
         repoNameLabel.numberOfLines = 1

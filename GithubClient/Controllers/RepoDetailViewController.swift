@@ -12,7 +12,7 @@ class RepoDetailViewController: UIViewController {
     private var navigationTitle: String?
     private var repoDetailView: RepoDetailView?
     
-    init(repoDetailView: RepoDetailView, navigationTitle: String) {
+    init(repoDetailView: RepoDetailView, navigationTitle: String?) {
         self.repoDetailView = repoDetailView
         self.navigationTitle = navigationTitle
         super.init(nibName: nil, bundle: nil)
@@ -33,7 +33,7 @@ class RepoDetailViewController: UIViewController {
     }
     
     private func initNavigationView() {
-        self.navigationItem.title = self.navigationTitle
+        self.navigationItem.title = self.navigationTitle ?? Const.Optional.noReposName
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationController?.navigationItem.largeTitleDisplayMode = .always
     }

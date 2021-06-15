@@ -5,8 +5,8 @@
 //  Created by Shota Fuchikami on 2021/06/10.
 //
 
-struct Repos: Decodable {
-    var name: String
+struct Repos: Decodable, Equatable {
+    var name: String?
     var htmlUrl: String
     var description: String?
     var stargazersCount: Int
@@ -20,9 +20,9 @@ struct Repos: Decodable {
         case owner
     }
     
-    struct User: Decodable {
-        var loginName: String
-        var avatarUrl: String
+    struct User: Decodable, Equatable {
+        var loginName: String?
+        var avatarUrl: String?
         var bio: String?
         var url: String
         

@@ -81,14 +81,14 @@ class ProfileView: UIView {
     
     private func initUserName() {
         userName.translatesAutoresizingMaskIntoConstraints = false
-        userName.text = self.userData.name
+        userName.text = self.userData.name ?? Const.Optional.noOwnerName
         userName.font = UIFont.systemFont(ofSize: 16.0)
         userName.lineBreakMode = .byTruncatingTail
     }
     
     private func initBio() {
         bio.translatesAutoresizingMaskIntoConstraints = false
-        bio.text = self.userData.bio ?? ""
+        bio.text = self.userData.bio ?? Const.Optional.blank
         bio.font = UIFont.systemFont(ofSize: 12.0)
         bio.lineBreakMode = .byTruncatingTail
     }

@@ -9,9 +9,9 @@ import UIKit
 
 class ProfileViewController: BaseViewController {
     
-    private var githubModel: GithubModel?
+    var userData: UserEntity? = nil
     
-    private var userData: UserEntity? = nil
+    private var githubModel: GithubModel?
     
     init(githubModel: GithubModel) {
         self.githubModel = githubModel
