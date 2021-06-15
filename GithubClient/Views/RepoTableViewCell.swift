@@ -104,7 +104,7 @@ class RepoTableViewCell: UITableViewCell {
     
     private func initRepoNameLabel() {
         repoNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        repoNameLabel.text = cellData.repositoryName
+        repoNameLabel.text = cellData.repositoryName ?? Const.Optional.noReposName
         repoNameLabel.tintColor = .systemFill
         repoNameLabel.font = UIFont.boldSystemFont(ofSize: 24.0)
         repoNameLabel.numberOfLines = 1
