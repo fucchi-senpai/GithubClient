@@ -9,10 +9,10 @@ import UIKit
 
 class RepoViewController: BaseViewController {
     
+    var reposDataList: [Repos] = []
+    
     private var githubModel: GithubModel?
     private var tableView: RepoTableView?
-    
-    var reposDataList: [Repos] = []
     
     init(tableView: RepoTableView, githubModel: GithubModel) {
         self.tableView = tableView
@@ -64,7 +64,7 @@ extension RepoViewController: RepoTableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let repos = self.reposDataList[indexPath.row]
-        let userData = CellData(profileImageUrl: repos.owner.avatarUrl, ownerName: repos.owner.loginName ?? "No Owner Name", repositoryName: repos.name ?? "No Repos Name", aboutRepository: repos.description ?? "", starCount: String(repos.stargazersCount))
+        let userData = CellData(profileImageUrl: repos.owner.avatarUrl, ownerName: repos.owner.loginName, repositoryName: repos.name, aboutRepository: repos.description, starCount: String(repos.stargazersCount))
         let repoDetailView = RepoDetailView(userData: userData)
         self.navigationController?.pushViewController(RepoDetailViewController(repoDetailView: repoDetailView, navigationTitle: userData.repositoryName), animated: true)
     }

@@ -24,4 +24,10 @@ struct Const {
         static let message = "しばらく経ってから再度お試しください。"
         static let buttonLabel = "OK"
     }
+    
+    struct Optional {
+        static let noOwnerName = "No owner name"
+        static let noReposName = "No repos name"
+        static let blank = ""
+    }
 }

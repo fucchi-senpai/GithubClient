@@ -95,7 +95,7 @@ class RepoTableViewCell: UITableViewCell {
     
     private func initOwnerNameLabel() {
         ownerLabel.translatesAutoresizingMaskIntoConstraints = false
-        ownerLabel.text = "owner: \(cellData.ownerName)"
+        ownerLabel.text = "owner: \(cellData.ownerName ?? Const.Optional.noOwnerName)"
         ownerLabel.tintColor = .systemFill
         ownerLabel.font = UIFont.systemFont(ofSize: 16.0)
         ownerLabel.numberOfLines = 1

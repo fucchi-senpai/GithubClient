@@ -102,21 +102,21 @@ class RepoDetailView: UIView {
     
     private func initOwnerName() {
         ownerName.translatesAutoresizingMaskIntoConstraints = false
-        ownerName.text = self.userData.ownerName
+        ownerName.text = self.userData.ownerName ?? Const.Optional.noOwnerName
         ownerName.font = UIFont.systemFont(ofSize: 12.0)
         ownerName.lineBreakMode = .byTruncatingTail
     }
     
     private func initRepositoryName() {
         repositoryName.translatesAutoresizingMaskIntoConstraints = false
-        repositoryName.text = self.userData.repositoryName
+        repositoryName.text = self.userData.repositoryName ?? Const.Optional.noReposName
         repositoryName.font = UIFont.boldSystemFont(ofSize: 20.0)
         repositoryName.lineBreakMode = .byTruncatingTail
     }
     
     private func initAboutRepository() {
         aboutRepository.translatesAutoresizingMaskIntoConstraints = false
-        aboutRepository.text = self.userData.aboutRepository
+        aboutRepository.text = self.userData.aboutRepository ?? Const.Optional.blank
         aboutRepository.font = UIFont.systemFont(ofSize: 16.0)
         aboutRepository.lineBreakMode = .byTruncatingTail
     }
