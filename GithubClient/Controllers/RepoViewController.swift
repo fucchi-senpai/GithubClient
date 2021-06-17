@@ -46,6 +46,7 @@ class RepoViewController: UIViewController {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         self.subscription?.dispose()
     }
     

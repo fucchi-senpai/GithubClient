@@ -43,7 +43,8 @@ class ProfileViewController: UIViewController {
         }
     }
     
-    open override func viewDidDisappear(_ animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         self.subscription?.dispose()
     }
     
