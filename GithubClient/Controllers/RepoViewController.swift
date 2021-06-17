@@ -6,27 +6,75 @@
 //
 
 import UIKit
+import RxSwift
 
-class RepoViewController: BaseViewController {
+class RepoViewController: UIViewController {
     
+    // MARK: field variable
     var reposDataList: [Repos] = []
     
+    private weak var delegate: BaseViewDelegate?
     private var githubModel: GithubModel?
+    private var loadingView: LoadingView?
+    private var subscription: Disposable?
     private var tableView: RepoTableView?
     
-    init(tableView: RepoTableView, githubModel: GithubModel) {
+    init(tableView: RepoTableView, githubModel: GithubModel, loadingview: LoadingView) {
         self.tableView = tableView
         self.githubModel = githubModel
-        super.init(loadingView: LoadingView(), requestUrl: "https://api.github.com/users/fucchi-senpai/repos")
+        self.loadingView = loadingview
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: Life cycle function
     override func viewDidLoad() {
-        self.delegate = self
         super.viewDidLoad()
+        self.delegate = self
+        self.beforeLoad()
+        self.delegate?.load(url: "https://api.github.com/users/fucchi-senpai/repos") { data in
+            self.delegate?.setUp(data: data)
+            self.postLoad()
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        self.subscription?.dispose()
+    }
+    
+    // MARK: Private function
+    /// API読み込み前処理
+    private func beforeLoad() {
+        print(#function)
+        DispatchQueue.main.async {
+            self.view.backgroundColor = .systemBackground
+            self.initLoadingView()
+            self.loadingView?.start()
+        }
+    }
+    
+    /// API読み込み後処理
+    private func postLoad() {
+        print(#function)
+        DispatchQueue.main.async {
+            self.delegate?.initViews()
+            self.loadingView?.stop()
+        }
+    }
+    
+    private func initLoadingView() {
+        guard let loadingView = self.loadingView else { return }
+        self.view.addSubview(loadingView)
+        loadingView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            loadingView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.2),
+            loadingView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.2),
+            loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            loadingView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+        ])
     }
     
     private func initNavigationView() {
