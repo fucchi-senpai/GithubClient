@@ -13,7 +13,7 @@ class ProfileViewController: UIViewController {
     // MARK: field variable
     var userData: UserEntity? = nil
     
-    private weak var delegate: BaseViewDelegate?
+    private(set) weak var delegate: BaseViewDelegate?
     private var githubModel: GithubModel?
     private var subscription: Disposable?
     private var loadingView: LoadingView?

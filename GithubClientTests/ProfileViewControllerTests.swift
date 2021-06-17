@@ -21,7 +21,7 @@ class ProfileViewControllerTests: XCTestCase {
 
     func testProfileEqualityTest_fromGithubAPI_withSuccessfulResponse() {
         let githubModel = GithubModelTestProfile(mock: ProfileVCTestMockData.success)
-        let vc = ProfileViewController(githubModel: githubModel)
+        let vc = ProfileViewController(githubModel: githubModel, loadingView: LoadingView())
         vc.view.layoutIfNeeded()
         vc.delegate?.load(url: "") { data in
             vc.delegate?.setUp(data: data)
@@ -35,7 +35,7 @@ class ProfileViewControllerTests: XCTestCase {
     
     func testProfileEqualityTest_fromGithubAPI_withAvatarUrlIsNil() {
         let githubModel = GithubModelTestProfile(mock: ProfileVCTestMockData.avatarNil)
-        let vc = ProfileViewController(githubModel: githubModel)
+        let vc = ProfileViewController(githubModel: githubModel, loadingView: LoadingView())
         vc.view.layoutIfNeeded()
         vc.delegate?.load(url: "") { data in
             vc.delegate?.setUp(data: data)
@@ -49,7 +49,7 @@ class ProfileViewControllerTests: XCTestCase {
     
     func testProfileEqualityTest_fromGithubAPI_withNameIsNil() {
         let githubModel = GithubModelTestProfile(mock: ProfileVCTestMockData.nameNil)
-        let vc = ProfileViewController(githubModel: githubModel)
+        let vc = ProfileViewController(githubModel: githubModel, loadingView: LoadingView())
         vc.view.layoutIfNeeded()
         vc.delegate?.load(url: "") { data in
             vc.delegate?.setUp(data: data)
@@ -63,7 +63,7 @@ class ProfileViewControllerTests: XCTestCase {
     
     func testProfileEqualityTest_fromGithubAPI_withBioIsNil() {
         let githubModel = GithubModelTestProfile(mock: ProfileVCTestMockData.bioNil)
-        let vc = ProfileViewController(githubModel: githubModel)
+        let vc = ProfileViewController(githubModel: githubModel, loadingView: LoadingView())
         vc.view.layoutIfNeeded()
         vc.delegate?.load(url: "") { data in
             vc.delegate?.setUp(data: data)
@@ -77,7 +77,7 @@ class ProfileViewControllerTests: XCTestCase {
     
     func testProfileEqualityTest_fromGithubAPI_withErrorResponse() {
         let githubModel = GithubModelTestProfile(mock: ProfileVCTestMockData.error)
-        let vc = ProfileViewController(githubModel: githubModel)
+        let vc = ProfileViewController(githubModel: githubModel, loadingView: LoadingView())
         vc.view.layoutIfNeeded()
         vc.delegate?.load(url: "") { data in
             vc.delegate?.setUp(data: data)

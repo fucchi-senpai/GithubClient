@@ -21,7 +21,7 @@ class ReposViewControllerTests: XCTestCase {
     
     func testReposEqualityTest_fromGithubAPI_withSuccessfulResponse() {
         let githubModel = GithubModelTestRepos(mock: ReposVCTestMockData.success)
-        let vc = RepoViewController(tableView: RepoTableView(), githubModel: githubModel)
+        let vc = RepoViewController(tableView: RepoTableView(), githubModel: githubModel, loadingview: LoadingView())
         vc.view.layoutIfNeeded()
         vc.delegate?.load(url: "") { data in
             vc.delegate?.setUp(data: data)
@@ -36,7 +36,7 @@ class ReposViewControllerTests: XCTestCase {
     
     func testReposEqualityTest_fromGithubAPI_withAvatarUrlIsNil() {
         let githubModel = GithubModelTestRepos(mock: ReposVCTestMockData.avatarNil)
-        let vc = RepoViewController(tableView: RepoTableView(), githubModel: githubModel)
+        let vc = RepoViewController(tableView: RepoTableView(), githubModel: githubModel, loadingview: LoadingView())
         vc.view.layoutIfNeeded()
         vc.delegate?.load(url: "") { data in
             vc.delegate?.setUp(data: data)
@@ -51,7 +51,7 @@ class ReposViewControllerTests: XCTestCase {
     
     func testReposEqualityTest_fromGithubAPI_withOwnerNameIsNil() {
         let githubModel = GithubModelTestRepos(mock: ReposVCTestMockData.ownerNameNil)
-        let vc = RepoViewController(tableView: RepoTableView(), githubModel: githubModel)
+        let vc = RepoViewController(tableView: RepoTableView(), githubModel: githubModel, loadingview: LoadingView())
         vc.view.layoutIfNeeded()
         vc.delegate?.load(url: "") { data in
             vc.delegate?.setUp(data: data)
@@ -66,7 +66,7 @@ class ReposViewControllerTests: XCTestCase {
     
     func testReposEqualityTest_fromGithubAPI_withReposNameIsNil() {
         let githubModel = GithubModelTestRepos(mock: ReposVCTestMockData.reposNameNil)
-        let vc = RepoViewController(tableView: RepoTableView(), githubModel: githubModel)
+        let vc = RepoViewController(tableView: RepoTableView(), githubModel: githubModel, loadingview: LoadingView())
         vc.view.layoutIfNeeded()
         vc.delegate?.load(url: "") { data in
             vc.delegate?.setUp(data: data)
@@ -81,7 +81,7 @@ class ReposViewControllerTests: XCTestCase {
     
     func testReposEqualityTest_fromGithubAPI_withErrorResponse() {
         let githubModel = GithubModelTestRepos(mock: ReposVCTestMockData.error)
-        let vc = RepoViewController(tableView: RepoTableView(), githubModel: githubModel)
+        let vc = RepoViewController(tableView: RepoTableView(), githubModel: githubModel, loadingview: LoadingView())
         vc.view.layoutIfNeeded()
         vc.delegate?.load(url: "") { data in
             vc.delegate?.setUp(data: data)

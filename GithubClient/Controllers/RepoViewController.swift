@@ -13,7 +13,7 @@ class RepoViewController: UIViewController {
     // MARK: field variable
     var reposDataList: [Repos] = []
     
-    private weak var delegate: BaseViewDelegate?
+    private(set) weak var delegate: BaseViewDelegate?
     private var githubModel: GithubModel?
     private var loadingView: LoadingView?
     private var subscription: Disposable?
