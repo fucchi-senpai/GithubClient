@@ -10,6 +10,7 @@ import Foundation
 protocol BaseViewDelegate: AnyObject {
     /// initialize views
     func initViews()
+    func initLoadingView()
     /// load API
     /// - Parameters:
     ///   - url: requestURLl

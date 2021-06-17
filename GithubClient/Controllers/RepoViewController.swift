@@ -29,6 +29,10 @@ class RepoViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    deinit {
+        print(#function)
+    }
 
     // MARK: Life cycle function
     override func viewDidLoad() {
@@ -63,18 +67,6 @@ class RepoViewController: UIViewController {
             self.delegate?.initViews()
             self.loadingView?.stop()
         }
-    }
-    
-    private func initLoadingView() {
-        guard let loadingView = self.loadingView else { return }
-        self.view.addSubview(loadingView)
-        loadingView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            loadingView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.2),
-            loadingView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.2),
-            loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-            loadingView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
-        ])
     }
     
     private func initNavigationView() {
@@ -124,6 +116,18 @@ extension RepoViewController: BaseViewDelegate {
     func initViews() {
         self.initNavigationView()
         self.initTableView()
+    }
+    
+    func initLoadingView() {
+        guard let loadingView = self.loadingView else { return }
+        self.view.addSubview(loadingView)
+        loadingView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            loadingView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.2),
+            loadingView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.2),
+            loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            loadingView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+        ])
     }
     
     func load(url: String, completion: @escaping (Data) -> Void) {
