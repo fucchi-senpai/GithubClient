@@ -13,11 +13,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard let windowScene = (scene as? UIWindowScene) else { return }
-        let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = MainTabBarViewController(githubModel: GithubModelImpl())
-        self.window = window
-        window.makeKeyAndVisible()
+        loadSettings() { url in
+            DispatchQueue.main.async {
+                guard let windowScene = (scene as? UIWindowScene) else { return }
+                let window = UIWindow(windowScene: windowScene)
+                window.rootViewController = UINavigationController(rootViewController: WebViewController(url: url))
+                self.window = window
+                window.makeKeyAndVisible()
+            }
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -48,6 +52,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
+    private func loadSettings(completion: @escaping (String) -> Void) {
+        do {
+            let settingURL: URL = URL(fileURLWithPath: Bundle.main.path(forResource: "settings", ofType: "plist")!)
+            let data = try Data(contentsOf: settingURL)
+            let decoder = PropertyListDecoder()
+            let settings = try decoder.decode(Settings.self, from: data)
+            print("settings.githubClientId: \(settings.githubClientId)")
+            completion("https://github.com/login/oauth/authorize?client_id=\(settings.githubClientId)&scope=public_repo")
+        } catch let error {
+            print("error: \(error)")
+        }
+    }
 
 }
 

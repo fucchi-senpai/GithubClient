@@ -82,4 +82,7 @@ Temporary Items
 *.dSYM.zip
 *.dSYM
 
+## Project File
+GithubClient/Secrets/*
+
 # End of https://www.toptal.com/developers/gitignore/api/xcode
