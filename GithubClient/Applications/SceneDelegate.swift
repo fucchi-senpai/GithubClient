@@ -13,11 +13,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        loadSettings() { url in
+        loadSettings() { settings in
             DispatchQueue.main.async {
                 guard let windowScene = (scene as? UIWindowScene) else { return }
                 let window = UIWindow(windowScene: windowScene)
-                window.rootViewController = UINavigationController(rootViewController: WebViewController(url: url))
+                let url = "https://github.com/login/oauth/authorize?client_id=\(settings.githubClientId)&scope=public_repo"
+                window.rootViewController = UINavigationController(rootViewController: WebViewController(url: url, settings: settings))
                 self.window = window
                 window.makeKeyAndVisible()
             }
@@ -52,14 +53,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
-    private func loadSettings(completion: @escaping (String) -> Void) {
+    private func loadSettings(completion: @escaping (Settings) -> Void) {
         do {
             let settingURL: URL = URL(fileURLWithPath: Bundle.main.path(forResource: "settings", ofType: "plist")!)
             let data = try Data(contentsOf: settingURL)
             let decoder = PropertyListDecoder()
             let settings = try decoder.decode(Settings.self, from: data)
             print("settings.githubClientId: \(settings.githubClientId)")
-            completion("https://github.com/login/oauth/authorize?client_id=\(settings.githubClientId)&scope=public_repo")
+            completion(settings)
         } catch let error {
             print("error: \(error)")
         }

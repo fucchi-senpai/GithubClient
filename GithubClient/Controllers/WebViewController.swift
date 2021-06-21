@@ -12,9 +12,11 @@ class WebViewController: UIViewController, WKUIDelegate {
     
     private var webView: WKWebView?
     private var url: String?
+    private var settings: Settings?
     
-    init(url: String) {
+    init(url: String, settings: Settings? = nil) {
         self.url = url
+        self.settings = settings
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -54,10 +56,30 @@ class WebViewController: UIViewController, WKUIDelegate {
 
 extension WebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        let url = navigationAction.request.url
-        print("callback url: \(String(describing: url))")
-        if url?.scheme == "githubclient", url?.host == "oauth" {
+        guard let url = navigationAction.request.url else {
+            return
+        }
+        if url.scheme == "githubclient", url.host == "oauth" {
             // TODO: Not implementation
+            self.dismiss(animated: true, completion: nil)
+            let strUrl = url.absoluteString
+            guard let urlComponent = URLComponents(string: strUrl) else {
+                return
+            }
+            let code = urlComponent.queryItems?.first(where: {
+                $0.name == "code"
+            })?.value
+            let obserber = GithubApiManager.getAccessToken(requestParam: [URLQueryItem(name: "code", value: code), URLQueryItem(name: "client_id", value: settings?.githubClientId), URLQueryItem(name: "client_secret", value: settings?.githubClientSecrets)])
+            obserber.subscribe(onNext: { data in
+                print("data \(data)")
+                do {
+                    let json = try JSONDecoder().decode([String: String].self, from: data)
+                    let accessToken = json["access_token"]
+                    UserDefaults.standard.set(accessToken, forKey: "ACCESS_TOKEN")
+                } catch {
+                    
+                }
+            })
         }
         decisionHandler(WKNavigationActionPolicy.allow)
     }
