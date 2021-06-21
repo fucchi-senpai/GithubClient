@@ -17,8 +17,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             DispatchQueue.main.async {
                 guard let windowScene = (scene as? UIWindowScene) else { return }
                 let window = UIWindow(windowScene: windowScene)
-                let url = "https://github.com/login/oauth/authorize?client_id=\(settings.githubClientId)&scope=public_repo"
-                window.rootViewController = UINavigationController(rootViewController: WebViewController(url: url, settings: settings))
+                
+                if UserDefaults.standard.string(forKey: "ACCESS_TOKEN") == nil {
+                    let url = "https://github.com/login/oauth/authorize?client_id=\(settings.githubClientId)&scope=public_repo"
+                    window.rootViewController = UINavigationController(rootViewController: WebViewController(url: url, settings: settings))
+                } else {
+                    window.rootViewController = MainTabBarViewController(githubModel: GithubModelImpl())
+                }
+                
                 self.window = window
                 window.makeKeyAndVisible()
             }

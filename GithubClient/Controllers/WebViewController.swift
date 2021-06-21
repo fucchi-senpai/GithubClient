@@ -76,8 +76,13 @@ extension WebViewController: WKNavigationDelegate {
                     let json = try JSONDecoder().decode([String: String].self, from: data)
                     let accessToken = json["access_token"]
                     UserDefaults.standard.set(accessToken, forKey: "ACCESS_TOKEN")
-                } catch {
-                    
+                    DispatchQueue.main.async {
+                        let vc = MainTabBarViewController(githubModel: GithubModelImpl())
+                        vc.modalPresentationStyle = .fullScreen
+                        self.present(vc, animated: true, completion: nil)
+                    }
+                } catch let error {
+                    print(error)
                 }
             })
         }
