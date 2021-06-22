@@ -51,6 +51,35 @@ class WebViewController: UIViewController, WKUIDelegate {
             webView.rightAnchor.constraint(equalTo: self.view.rightAnchor)
         ])
     }
+    
+    private func fallbackOAuth(with url: URL) {
+        guard let urlComponent = URLComponents(string: url.absoluteString) else {
+            return
+        }
+        let code = urlComponent.queryItems?.first(where: {
+            $0.name == "code"
+        })?.value
+        let requestParams = [
+            URLQueryItem(name: "code", value: code),
+            URLQueryItem(name: "client_id", value: settings?.githubClientId),
+            URLQueryItem(name: "client_secret", value: settings?.githubClientSecrets)
+        ]
+        let obserber = GithubApiManager.getAccessToken(requestParam: requestParams)
+        obserber.subscribe(onNext: { data in
+            do {
+                let json = try JSONDecoder().decode([String: String].self, from: data)
+                let accessToken = json["access_token"]
+                DataStore.saveString(accessToken, forKey: "ACCESS_TOKEN")
+                DispatchQueue.main.async {
+                    let vc = MainTabBarViewController(githubModel: GithubModelImpl())
+                    vc.modalPresentationStyle = .fullScreen
+                    self.present(vc, animated: true, completion: nil)
+                }
+            } catch let error {
+                print("error: \(error)")
+            }
+        })
+    }
 
 }
 
@@ -60,31 +89,8 @@ extension WebViewController: WKNavigationDelegate {
             return
         }
         if url.scheme == "githubclient", url.host == "oauth" {
-            // TODO: Not implementation
             self.dismiss(animated: true, completion: nil)
-            let strUrl = url.absoluteString
-            guard let urlComponent = URLComponents(string: strUrl) else {
-                return
-            }
-            let code = urlComponent.queryItems?.first(where: {
-                $0.name == "code"
-            })?.value
-            let obserber = GithubApiManager.getAccessToken(requestParam: [URLQueryItem(name: "code", value: code), URLQueryItem(name: "client_id", value: settings?.githubClientId), URLQueryItem(name: "client_secret", value: settings?.githubClientSecrets)])
-            obserber.subscribe(onNext: { data in
-                print("data \(data)")
-                do {
-                    let json = try JSONDecoder().decode([String: String].self, from: data)
-                    let accessToken = json["access_token"]
-                    UserDefaults.standard.set(accessToken, forKey: "ACCESS_TOKEN")
-                    DispatchQueue.main.async {
-                        let vc = MainTabBarViewController(githubModel: GithubModelImpl())
-                        vc.modalPresentationStyle = .fullScreen
-                        self.present(vc, animated: true, completion: nil)
-                    }
-                } catch let error {
-                    print(error)
-                }
-            })
+            fallbackOAuth(with: url)
         }
         decisionHandler(WKNavigationActionPolicy.allow)
     }

@@ -21,8 +21,8 @@ class GithubModelImpl: GithubModel {
             guard let url = URL(string: requestUrl) else { return Disposables.create() }
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
-            let accessToken = UserDefaults.standard.string(forKey: "ACCESS_TOKEN")
-            request.allHTTPHeaderFields = ["Authorization": " token \(accessToken ?? "")"]
+            let accessToken = DataStore.getString(forKey: "ACCESS_TOKEN") ?? ""
+            request.allHTTPHeaderFields = ["Authorization": " token \(accessToken)"]
             let dataTask = URLSession.shared.dataTask(with: request) { (data, success, error) in
                 guard let response = data else {
                     observer.on(.error(error ?? RxError.unknown))

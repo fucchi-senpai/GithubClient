@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 guard let windowScene = (scene as? UIWindowScene) else { return }
                 let window = UIWindow(windowScene: windowScene)
                 
-                if UserDefaults.standard.string(forKey: "ACCESS_TOKEN") == nil {
+                if DataStore.getString(forKey: "ACCESS_TOKEN") == nil {
                     let url = "https://github.com/login/oauth/authorize?client_id=\(settings.githubClientId)&scope=public_repo"
                     window.rootViewController = UINavigationController(rootViewController: WebViewController(url: url, settings: settings))
                 } else {
