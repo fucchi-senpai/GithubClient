@@ -37,7 +37,7 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         self.delegate = self
         self.beforeLoad()
-        self.delegate?.load(url: "https://api.github.com/users/fucchi-senpai") { data in
+        self.delegate?.load(url: "https://api.github.com/user") { data in
             self.delegate?.setUp(data: data)
             self.postLoad()
         }
