@@ -21,7 +21,7 @@ class GithubModelImpl: GithubModel {
             guard let url = URL(string: requestUrl) else { return Disposables.create() }
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
-            let accessToken = DataStore.getString(forKey: "ACCESS_TOKEN") ?? ""
+            let accessToken = DataStore.getString(forKey: Const.DataStoreKey.accessToken) ?? ""
             request.allHTTPHeaderFields = ["Authorization": " token \(accessToken)"]
             let dataTask = URLSession.shared.dataTask(with: request) { (data, success, error) in
                 guard let response = data else {

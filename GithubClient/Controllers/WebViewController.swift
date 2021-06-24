@@ -69,7 +69,7 @@ class WebViewController: UIViewController, WKUIDelegate {
             do {
                 let json = try JSONDecoder().decode([String: String].self, from: data)
                 let accessToken = json["access_token"]
-                DataStore.saveString(accessToken, forKey: "ACCESS_TOKEN")
+                DataStore.saveString(accessToken, forKey: Const.DataStoreKey.accessToken)
                 DispatchQueue.main.async {
                     let vc = MainTabBarViewController(githubModel: GithubModelImpl())
                     vc.modalPresentationStyle = .fullScreen
@@ -88,7 +88,7 @@ extension WebViewController: WKNavigationDelegate {
         guard let url = navigationAction.request.url else {
             return
         }
-        if url.scheme == "githubclient", url.host == "oauth" {
+        if url.scheme == "githubclient" && url.host == "oauth" {
             self.dismiss(animated: true, completion: nil)
             fallbackOAuth(with: url)
         }

@@ -30,4 +30,8 @@ struct Const {
         static let noReposName = "No repos name"
         static let blank = ""
     }
+    
+    struct DataStoreKey {
+        static let accessToken = "ACCESS_TOKEN"
+    }
 }
